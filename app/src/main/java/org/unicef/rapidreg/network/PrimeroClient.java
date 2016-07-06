@@ -1,6 +1,7 @@
 package org.unicef.rapidreg.network;
 
 import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
+import org.unicef.rapidreg.forms.tracing_request.TracingRequestFormRoot;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
 
@@ -18,6 +19,13 @@ public interface PrimeroClient {
 
     @GET("/api/form_sections")
     Call<CaseFormRoot> getForm(
+            @Header("Cookie") String cookie,
+            @Query("locale") String locale,
+            @Query("mobile") Boolean isMobile,
+            @Query("parent_form") String parentForm);
+
+    @GET("/api/form_sections")
+    Call<TracingRequestFormRoot> getTracingRequestForm(
             @Header("Cookie") String cookie,
             @Query("locale") String locale,
             @Query("mobile") Boolean isMobile,
