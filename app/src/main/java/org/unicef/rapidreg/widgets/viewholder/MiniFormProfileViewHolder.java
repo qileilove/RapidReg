@@ -11,8 +11,8 @@ import android.widget.TextView;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.childcase.CaseListAdapter;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache.CaseProfile;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache.CaseProfile;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,10 +43,10 @@ public class MiniFormProfileViewHolder extends BaseViewHolder<Field> {
 
     @Override
     public void setValue(Field field) {
-        idView.setText(CaseFieldValueCache.getProfileValue(CaseProfile.ID_NORMAL_STATE));
+        idView.setText(FieldValueCache.getProfileValue(CaseProfile.ID_NORMAL_STATE));
         CaseListAdapter.Gender gender;
-        if (CaseFieldValueCache.getProfileValue(CaseProfile.SEX) != null) {
-            gender = CaseListAdapter.Gender.valueOf(CaseFieldValueCache.getProfileValue(CaseProfile.SEX).toUpperCase());
+        if (FieldValueCache.getProfileValue(CaseProfile.SEX) != null) {
+            gender = CaseListAdapter.Gender.valueOf(FieldValueCache.getProfileValue(CaseProfile.SEX).toUpperCase());
         } else {
             gender = CaseListAdapter.Gender.UNKNOWN;
         }
@@ -54,8 +54,8 @@ public class MiniFormProfileViewHolder extends BaseViewHolder<Field> {
         genderBadge.setImageDrawable(drawable);
         genderName.setText(gender.getName());
         genderName.setTextColor(ContextCompat.getColor(context, gender.getColorId()));
-        age.setText(CaseFieldValueCache.getProfileValue(CaseProfile.AGE));
-        registrationDate.setText(CaseFieldValueCache.getProfileValue(CaseProfile.REGISTRATION_DATE));
+        age.setText(FieldValueCache.getProfileValue(CaseProfile.AGE));
+        registrationDate.setText(FieldValueCache.getProfileValue(CaseProfile.REGISTRATION_DATE));
     }
 
     @Override

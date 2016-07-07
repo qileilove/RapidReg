@@ -181,4 +181,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     protected abstract void processBackButton();
 
+    public boolean isInDetailMode() {
+        return false;
+    }
+
+    public boolean isInEditMode() {
+        return false;
+    }
 }

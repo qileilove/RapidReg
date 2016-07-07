@@ -1,15 +1,14 @@
 package org.unicef.rapidreg.widgets.viewholder;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.view.BaseActivity;
 import org.unicef.rapidreg.childcase.media.AudioRecorderActivity;
-import org.unicef.rapidreg.childcase.CaseActivity;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.utils.StreamUtil;
 
 import butterknife.BindView;
@@ -29,28 +28,28 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     @BindView(R.id.no_file_text_view)
     TextView noFileTextView;
 
-    private CaseActivity activity;
+    private BaseActivity activity;
 
-    public AudioUploadViewHolder(Context context, View itemView) {
+    public AudioUploadViewHolder(BaseActivity context, View itemView) {
         super(context, itemView);
         ButterKnife.bind(this, itemView);
-        activity = (CaseActivity) context;
+        activity = context;
 
-        mFileName = CaseFieldValueCache.AUDIO_FILE_PATH;
+        mFileName = FieldValueCache.AUDIO_FILE_PATH;
     }
 
     @Override
     public void setValue(Object field) {
         final boolean audiofileExists = StreamUtil.isFileExists(mFileName);
 
-        if (!activity.getCurrentFeature().isInEditMode()) {
+        if (!activity.isInEditMode()) {
             initPlayAudioUI();
         }
 
         if (audiofileExists) {
             initPlayAudioUI();
             showDeleteIconWhenIsEditMode();
-        } else if (activity.getCurrentFeature().isInEditMode()){
+        } else if (activity.isInEditMode()) {
             initAudioRecordUI();
         }
     }
@@ -81,7 +80,7 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     @OnClick(R.id.delete_button)
     public void onDeleteButtonClicked() {
         initAudioRecordUI();
-        CaseFieldValueCache.clearAudioFile();
+        FieldValueCache.clearAudioFile();
     }
 
     @OnClick(R.id.record_button)
@@ -96,7 +95,7 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     }
 
     private void showDeleteIconWhenIsEditMode() {
-        if (activity.getCurrentFeature().isInEditMode()) {
+        if (activity.isInEditMode()) {
             audioDeleteButton.setVisibility(View.VISIBLE);
         }
     }

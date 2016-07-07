@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public abstract class BaseTextViewHolder extends BaseViewHolder<Field> {
         if (isSubformField(field)) {
             SubformCache.put(field.getParent(), getValues(field));
         } else {
-            CaseFieldValueCache.put(field.getName(),
+            FieldValueCache.put(field.getName(),
                     getValueView().getText().toString());
         }
     }

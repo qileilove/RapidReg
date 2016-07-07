@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
 import java.util.ArrayList;
@@ -63,8 +63,8 @@ public class SingleLineRadioViewHolder extends BaseViewHolder<Field> {
                 setSelectedRadio(getValue(field));
             }
         } else {
-            if (!TextUtils.isEmpty(CaseFieldValueCache.get(getLabel(field)))) {
-                setSelectedRadio(CaseFieldValueCache.get(getLabel(field)));
+            if (!TextUtils.isEmpty(FieldValueCache.get(getLabel(field)))) {
+                setSelectedRadio(FieldValueCache.get(getLabel(field)));
             }
         }
     }
@@ -79,14 +79,14 @@ public class SingleLineRadioViewHolder extends BaseViewHolder<Field> {
                     if (isSubformField(field)) {
                         SubformCache.put(field.getParent(), getValues(field, options.get(0)));
                     } else {
-                        CaseFieldValueCache.put(field.getDisplayName()
+                        FieldValueCache.put(field.getDisplayName()
                                 .get(language), options.get(0));
                     }
                 } else {
                     if (isSubformField(field)) {
                         SubformCache.put(field.getParent(), getValues(field, options.get(1)));
                     } else {
-                        CaseFieldValueCache.put(field.getDisplayName()
+                        FieldValueCache.put(field.getDisplayName()
                                 .get(language), options.get(1));
                     }
                 }

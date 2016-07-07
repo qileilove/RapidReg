@@ -27,8 +27,8 @@ import org.unicef.rapidreg.forms.CaseFormRoot;
 import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.CaseService;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.CasePhotoCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 import org.unicef.rapidreg.utils.ImageCompressUtil;
 import org.unicef.rapidreg.widgets.viewholder.PhotoUploadViewHolder;
@@ -128,7 +128,7 @@ public class CaseActivity extends BaseActivity {
         } else if (currentFeature.isInEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
-            CaseFieldValueCache.clearAudioFile();
+            FieldValueCache.clearAudioFile();
             turnToFeature(CaseFeature.LIST);
         }
     }
@@ -138,7 +138,7 @@ public class CaseActivity extends BaseActivity {
         if (currentFeature.isInEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
-            CaseFieldValueCache.clearAudioFile();
+            FieldValueCache.clearAudioFile();
             turnToFeature(CaseFeature.LIST);
         }
     }
@@ -148,7 +148,7 @@ public class CaseActivity extends BaseActivity {
         if (currentFeature.isInDetailMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
-            CaseFieldValueCache.clearAudioFile();
+            FieldValueCache.clearAudioFile();
             intentSender.showTracingRequestActivity(this);
         }
     }
@@ -158,9 +158,19 @@ public class CaseActivity extends BaseActivity {
         if (currentFeature.isInEditMode()) {
             showQuitDialog(R.id.nav_sync);
         } else {
-            CaseFieldValueCache.clearAudioFile();
+            FieldValueCache.clearAudioFile();
             intentSender.showSyncActivity(this);
         }
+    }
+
+    @Override
+    public boolean isInDetailMode() {
+        return currentFeature.isInDetailMode();
+    }
+
+    @Override
+    public boolean isInEditMode() {
+        return currentFeature.isInEditMode();
     }
 
     public void turnToFeature(CaseFeature feature) {
@@ -185,7 +195,7 @@ public class CaseActivity extends BaseActivity {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        CaseFieldValueCache.clearAudioFile();
+                        FieldValueCache.clearAudioFile();
                         switch (clickedButton) {
                             case R.id.nav_cases:
                                 turnToFeature(CaseFeature.LIST);
@@ -208,10 +218,11 @@ public class CaseActivity extends BaseActivity {
         toolbar.inflateMenu(R.menu.toolbar_main);
         toolbar.setOnMenuItemClickListener(new CaseMenuItemListener());
 
-        caseSaveMenu = toolbar.getMenu().findItem(R.id.save_case);
+        caseSaveMenu = toolbar.getMenu().findItem(R.id.save);
         caseSearchMenu = toolbar.getMenu().findItem(R.id.search);
         caseToggleMenu = toolbar.getMenu().findItem(R.id.toggle);
     }
+
 
     private String getOutputMediaFilePath() {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
@@ -221,7 +232,6 @@ public class CaseActivity extends BaseActivity {
         }
         return mediaStorageDir.getPath() + File.separator + System.currentTimeMillis() + ".jpg";
     }
-
 
     private class CaseMenuItemListener implements Toolbar.OnMenuItemClickListener {
         @Override
@@ -233,7 +243,7 @@ public class CaseActivity extends BaseActivity {
                 case R.id.search:
                     turnToFeature(CaseFeature.SEARCH);
                     return true;
-                case R.id.save_case:
+                case R.id.save:
                     return saveCase();
                 default:
                     return false;
@@ -265,7 +275,7 @@ public class CaseActivity extends BaseActivity {
         clearFocusToMakeLastFieldSaved();
         if (validateRequiredField()) {
             Map<Bitmap, String> photoBitPaths = CasePhotoCache.getPhotoBitPaths();
-            CaseService.getInstance().saveOrUpdateCase(CaseFieldValueCache.getValues(),
+            CaseService.getInstance().saveOrUpdateCase(FieldValueCache.getValues(),
                     SubformCache.getValues(),
                     photoBitPaths);
             turnToFeature(CaseFeature.LIST);
@@ -283,7 +293,7 @@ public class CaseActivity extends BaseActivity {
         }
 
         for (String field : requiredFieldNames) {
-            if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
+            if (TextUtils.isEmpty(FieldValueCache.getValues().get(field))) {
                 Toast.makeText(CaseActivity.this, R.string.required_field_is_not_filled,
                         Toast.LENGTH_LONG).show();
                 return false;
@@ -330,8 +340,8 @@ public class CaseActivity extends BaseActivity {
     public enum DetailState {
         VISIBILITY(R.drawable.visible, true),
         INVISIBILITY(R.drawable.invisible, false);
-
         private final int resId;
+
         private final boolean isDetailShow;
 
         DetailState(int resId, boolean isDetailShow) {
@@ -350,5 +360,6 @@ public class CaseActivity extends BaseActivity {
         public boolean isDetailShow() {
             return isDetailShow;
         }
+
     }
 }

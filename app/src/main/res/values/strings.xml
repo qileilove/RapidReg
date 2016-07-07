@@ -66,7 +66,7 @@
     <string name="quit_without_saving">Are you sure to quit without saving?</string>
     <string name="recording_is_too_short">Recording is too short</string>
     <string name="audio_file_not_exists">No audio file exists.</string>
-    
+
     <!--Sync-->
     <string name="last_sync_time">Last synchronization time</string>
     <string name="record_count_for_last_sync">Record count for last synchronisation</string>
@@ -82,6 +82,9 @@
     <string name="confirm_button_text">Yes</string>
     <string name="sync_success_message">Sync Success !</string>
     <string name="sync_error_message">Sync Failed !</string>
+    <string name="tracing_requests">Tracing requests</string>
+    <string name="new_tracing">New tracing request</string>
+    <string name="tracing_details">Tracing request details</string>
     <!--Sync-->
 
     <!--Transparent theme-->

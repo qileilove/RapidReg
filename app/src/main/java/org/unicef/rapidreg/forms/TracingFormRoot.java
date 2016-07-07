@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TracingRequestFormRoot {
+public class TracingFormRoot {
     @SerializedName("Enquiries")
     @Expose
     private List<Section> sections = new ArrayList<>();

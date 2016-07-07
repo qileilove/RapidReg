@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class TickBoxViewHolder extends BaseViewHolder<Field> {
         if (isSubformField(field)) {
             valueView.setChecked(Boolean.valueOf(getValue(field)));
         } else {
-            valueView.setChecked(Boolean.valueOf(CaseFieldValueCache.get(getLabel(field))));
+            valueView.setChecked(Boolean.valueOf(FieldValueCache.get(getLabel(field))));
         }
     }
 
@@ -54,7 +54,7 @@ public class TickBoxViewHolder extends BaseViewHolder<Field> {
                 if (isSubformField(field)) {
                     SubformCache.put(field.getParent(), getValues(field, getResult()));
                 } else {
-                    CaseFieldValueCache.put(getLabel(field), getResult());
+                    FieldValueCache.put(getLabel(field), getResult());
                 }
             }
         });

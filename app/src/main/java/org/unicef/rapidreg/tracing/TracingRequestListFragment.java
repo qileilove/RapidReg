@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.tracing;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,9 +21,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.model.Case;
-import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.model.Tracing;
+import org.unicef.rapidreg.service.TracingFormService;
+import org.unicef.rapidreg.service.TracingService;
 import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -35,8 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresenter>
-        implements CaseListView {
+public class TracingRequestListFragment extends MvpFragment<TracingRequestListView, TracingRequestListPresenter>
+        implements TracingRequestListView {
 
     private static final SpinnerState[] SPINNER_STATES = {
             SpinnerState.AGE_ASC,
@@ -65,7 +65,7 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
     @BindView(R.id.list_result)
     ViewSwitcher viewSwitcher;
 
-    private CaseListAdapter adapter;
+    private TracingRequestListAdapter adapter;
 
     @Nullable
     @Override
@@ -82,12 +82,12 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
     }
 
     @Override
-    public CaseListPresenter createPresenter() {
-        return new CaseListPresenter();
+    public TracingRequestListPresenter createPresenter() {
+        return new TracingRequestListPresenter();
     }
 
     @Override
-    public void initView(final CaseListAdapter adapter) {
+    public void initView(final TracingRequestListAdapter adapter) {
         this.adapter = adapter;
 
         initCaseListContainer(adapter);
@@ -95,19 +95,19 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
         initFloatingMenu();
     }
 
-    private void initCaseListContainer(CaseListAdapter adapter) {
+    private void initCaseListContainer(TracingRequestListAdapter adapter) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         caseListContainer.setLayoutManager(layoutManager);
         caseListContainer.setAdapter(adapter);
 
-        List<Case> caseList = CaseService.getInstance().getCaseList();
-        int index = caseList.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
+        List<Tracing> tracingList = TracingService.getInstance().getTracingList();
+        int index = tracingList.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
         viewSwitcher.setDisplayedChild(index);
 
     }
 
-    private void initOrderSpinner(final CaseListAdapter adapter) {
+    private void initOrderSpinner(final TracingRequestListAdapter adapter) {
         orderSpinner.setAdapter(new SpinnerAdapter(getActivity(),
                 R.layout.case_list_spinner_opened, Arrays.asList(SPINNER_STATES)));
         orderSpinner.setSelection(DEFAULT_SPINNER_STATE_POSITION);
@@ -124,19 +124,19 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
             }
 
             private void handleItemSelection(int position) {
-                CaseService caseService = CaseService.getInstance();
+                TracingService tracingService = TracingService.getInstance();
                 switch (SPINNER_STATES[position]) {
                     case AGE_ASC:
-                        adapter.setCaseList(caseService.getCaseListOrderByAgeASC());
+                        adapter.setTracingList(tracingService.getTracingListOrderByAgeASC());
                         break;
                     case AGE_DES:
-                        adapter.setCaseList(caseService.getCaseListOrderByAgeDES());
+                        adapter.setTracingList(tracingService.getTracingListOrderByAgeDES());
                         break;
                     case DATE_ASC:
-                        adapter.setCaseList(caseService.getCaseListOrderByDateASC());
+                        adapter.setTracingList(tracingService.getTracingListOrderByDateASC());
                         break;
                     case DATE_DES:
-                        adapter.setCaseList(caseService.getCaseListOrderByDateDES());
+                        adapter.setTracingList(tracingService.getTracingListOrderByDateDES());
                         break;
                     default:
                         break;
@@ -160,20 +160,20 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
                 });
     }
 
-    @OnClick(R.id.add_case)
-    public void onCaseAddClicked() {
-        CaseService.getInstance().clearCaseCache();
+    @OnClick(R.id.add_tracing)
+    public void onTracingAddClicked() {
+        TracingService.getInstance().clearCache();
         SubformCache.clear();
         FieldValueCache.clearAudioFile();
-        if (!CaseFormService.getInstance().isFormReady()) {
+        if (!TracingFormService.getInstance().isFormReady()) {
             Toast.makeText(getActivity(),
                     R.string.syncing_forms_text, Toast.LENGTH_LONG).show();
             return;
         }
         floatingMenu.collapseImmediately();
 
-        CaseActivity activity = (CaseActivity) getActivity();
-        activity.turnToFeature(CaseFeature.ADD);
+        TracingRequestActivity activity = (TracingRequestActivity) getActivity();
+        activity.turnToFeature(TracingRequestFeature.ADD);
     }
 
     public void toggleMode(boolean isShow) {

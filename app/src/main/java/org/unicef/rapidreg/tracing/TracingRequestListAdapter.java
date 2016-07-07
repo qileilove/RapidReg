@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.tracing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,8 +17,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.model.Case;
 import org.unicef.rapidreg.model.CasePhoto;
+import org.unicef.rapidreg.model.Tracing;
 import org.unicef.rapidreg.service.CasePhotoService;
 import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.cache.CasePhotoCache;
@@ -37,22 +37,22 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseListHolder> {
-    public static final String TAG = CaseListAdapter.class.getSimpleName();
+public class TracingRequestListAdapter extends RecyclerView.Adapter<TracingRequestListAdapter.CaseListHolder> {
+    public static final String TAG = TracingRequestListAdapter.class.getSimpleName();
     private static final int TEXT_AREA_SHOWED_STATE = 0;
     private static final int TEXT_AREA_HIDDEN_STATE = 1;
 
-    private List<Case> caseList = new ArrayList<>();
-    private CaseActivity activity;
+    private List<Tracing> tracingList = new ArrayList<>();
+    private TracingRequestActivity activity;
     private DateFormat dateFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
     private boolean isDetailShow = true;
 
-    public CaseListAdapter(Context activity) {
-        this.activity = (CaseActivity) activity;
+    public TracingRequestListAdapter(Context activity) {
+        this.activity = (TracingRequestActivity) activity;
     }
 
-    public void setCaseList(List<Case> caseList) {
-        this.caseList = caseList;
+    public void setTracingList(List<Tracing> tracingList) {
+        this.tracingList = tracingList;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
     @Override
     public void onBindViewHolder(CaseListHolder holder, int position) {
-        final Case caseItem = caseList.get(position);
+        final Tracing caseItem = tracingList.get(position);
 
         final String caseJson = new String(caseItem.getContent().getBlob());
         final String subformJson = new String(caseItem.getSubform().getBlob());
@@ -118,7 +118,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
                 CasePhotoCache.syncPhotosPaths(casePhotos);
 
-                activity.turnToFeature(CaseFeature.DETAILS);
+                activity.turnToFeature(TracingRequestFeature.DETAILS);
 
                 try {
                     FieldValueCache.clearAudioFile();
@@ -133,7 +133,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
         toggleTextArea(holder);
     }
 
-    private void setProfileForMiniForm(Case caseItem, Map<String, String> caseInfo, String shortUUID) {
+    private void setProfileForMiniForm(Tracing caseItem, Map<String, String> caseInfo, String shortUUID) {
         FieldValueCache.addProfileItem(FieldValueCache.CaseProfile.ID_NORMAL_STATE, shortUUID);
         FieldValueCache.addProfileItem(FieldValueCache.CaseProfile.SEX, caseInfo.get("Sex"));
         FieldValueCache.addProfileItem(FieldValueCache.CaseProfile.REGISTRATION_DATE,
@@ -145,7 +145,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
     @Override
     public int getItemCount() {
-        return caseList.size();
+        return tracingList.size();
     }
 
     public void toggleViews(boolean isDetailShow) {

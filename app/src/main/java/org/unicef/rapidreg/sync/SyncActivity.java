@@ -38,4 +38,14 @@ public class SyncActivity extends BaseActivity {
     protected void processBackButton() {
         logOut(this);
     }
+
+    @Override
+    public boolean isInDetailMode() {
+        return false;
+    }
+
+    @Override
+    public boolean isInEditMode() {
+        return false;
+    }
 }

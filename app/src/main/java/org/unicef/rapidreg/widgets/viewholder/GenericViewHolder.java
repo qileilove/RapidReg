@@ -11,7 +11,7 @@ import android.widget.ViewSwitcher;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.exception.DialogException;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.widgets.dialog.BaseDialog;
 import org.unicef.rapidreg.widgets.dialog.FiledDialogFactory;
 
@@ -57,7 +57,7 @@ public class GenericViewHolder extends BaseTextViewHolder {
         if (isSubformField(field)) {
             valueView.setText(getValue(field));
         } else {
-            valueView.setText(CaseFieldValueCache.get(field.getName()));
+            valueView.setText(FieldValueCache.get(field.getName()));
         }
 
         if (TextUtils.isEmpty(valueView.getText())) {

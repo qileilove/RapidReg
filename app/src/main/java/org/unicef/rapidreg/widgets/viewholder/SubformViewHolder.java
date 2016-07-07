@@ -1,6 +1,5 @@
 package org.unicef.rapidreg.widgets.viewholder;
 
-import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.CaseActivity;
+import org.unicef.rapidreg.base.view.BaseActivity;
 import org.unicef.rapidreg.childcase.CaseRegisterAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.SubformCache;
@@ -29,15 +28,15 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
     @BindView(R.id.add_subform)
     Button addSubformBtn;
 
-    private CaseActivity activity;
+    private BaseActivity activity;
     private ViewGroup parent;
     private List<Field> fields;
     private String fieldParent;
 
-    public SubformViewHolder(Context context, View itemView) {
+    public SubformViewHolder(BaseActivity context, View itemView) {
         super(context, itemView);
         ButterKnife.bind(this, itemView);
-        activity = (CaseActivity) context;
+        activity = context;
         parent = (ViewGroup) itemView;
     }
 
@@ -94,7 +93,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
                 updateIndexForFields();
             }
         });
-        deleteBtn.setVisibility(activity.getCurrentFeature().isInEditMode() ?
+        deleteBtn.setVisibility(activity.isInEditMode() ?
                 View.VISIBLE : View.GONE);
     }
 

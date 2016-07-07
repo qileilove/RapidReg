@@ -18,8 +18,8 @@ import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.service.CasePhotoService;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.CasePhotoCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.utils.ImageCompressUtil;
 
 import java.util.List;
@@ -139,7 +139,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
             container.addView(itemView);
             ImageView imageView = (ImageView) itemView.findViewById(R.id.case_photo_item);
 
-            if (CasePhotoCache.size() == 0){
+            if (CasePhotoCache.size() == 0) {
                 imageView.setImageResource(R.drawable.photo_placeholder);
                 caseActivity.findViewById(R.id.edit_case).setVisibility(View.VISIBLE);
                 return itemView;
@@ -179,7 +179,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
                 if (!isPhotosPrepared) {
                     synchronized (CasePhotoViewPagerAdapter.this) {
                         if (!isPhotosPrepared) {
-                            String caseIdStr = CaseFieldValueCache.getProfileValue(CaseFieldValueCache.CaseProfile.ID);
+                            String caseIdStr = FieldValueCache.getProfileValue(FieldValueCache.CaseProfile.ID);
                             long caseId = Long.parseLong(caseIdStr);
                             List<CasePhoto> allCasePhotos = CasePhotoService.getInstance().getAllCasePhotos(caseId);
                             CasePhotoCache.syncCachingPhotos(allCasePhotos);
@@ -194,7 +194,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
             protected void onPostExecute(Integer integer) {
                 renderPhoto(imageView, position);
                 CasePhotoViewPagerAdapter.this.notifyDataSetChanged();
-                if(isPhotosPrepared){
+                if (isPhotosPrepared) {
                     caseActivity.findViewById(R.id.edit_case).setVisibility(View.VISIBLE);
                 }
             }

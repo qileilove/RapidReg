@@ -1,7 +1,6 @@
 package org.unicef.rapidreg.widgets.viewholder;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,7 +13,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.CaseActivity;
+import org.unicef.rapidreg.base.view.BaseActivity;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import org.unicef.rapidreg.childcase.media.CasePhotoViewActivity;
 import org.unicef.rapidreg.forms.Field;
@@ -37,12 +36,12 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
     @BindView(R.id.no_photo_promote_view)
     TextView noPhotoPromoteView;
 
-    private CaseActivity activity;
+    private BaseActivity activity;
 
-    public PhotoUploadViewHolder(Context context, View itemView) {
+    public PhotoUploadViewHolder(BaseActivity context, View itemView) {
         super(context, itemView);
         ButterKnife.bind(this, itemView);
-        activity = (CaseActivity) context;
+        activity = context;
     }
 
     @Override
@@ -59,7 +58,7 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
     }
 
     private void appendAddPhotoIconExceptViewPage(List<Bitmap> previousPhotos) {
-        if (!activity.getCurrentFeature().isInDetailMode()) {
+        if (!activity.isInDetailMode()) {
             int addIconId = CasePhotoCache.isEmpty() ? R.drawable.photo_camera : R.drawable.photo_add;
             Bitmap addPhotoIcon = BitmapFactory.decodeResource(context.getResources(), addIconId);
             previousPhotos.add(addPhotoIcon);
@@ -69,7 +68,7 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
     }
 
     private void setOnItemClickListenerOnViewPage() {
-        if (activity.getCurrentFeature().isInDetailMode()) {
+        if (activity.isInDetailMode()) {
             photoGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

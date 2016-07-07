@@ -13,7 +13,7 @@ import org.unicef.rapidreg.db.PrimeroDB;
 
 @Table(database = PrimeroDB.class)
 @ModelContainer
-public class CasePhoto extends BaseModel {
+public class TracingPhoto extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id;
@@ -25,16 +25,16 @@ public class CasePhoto extends BaseModel {
     Blob thumbnail;
 
     @ForeignKey(references = {@ForeignKeyReference(
-            columnName = "case_id",
+            columnName = "tracing_id",
             columnType = long.class,
             foreignKeyColumnName = "id"
     )})
-    Case aCase;
+    Tracing tracing;
 
     @Column
     String path;
 
-    public CasePhoto() {
+    public TracingPhoto() {
     }
 
     public long getId() {
@@ -57,12 +57,12 @@ public class CasePhoto extends BaseModel {
         return path;
     }
 
-    public Case getCase() {
-        return aCase;
+    public Tracing getTracing() {
+        return tracing;
     }
 
-    public void setCase(Case aCase) {
-        this.aCase = aCase;
+    public void setTracing(Tracing tracing) {
+        this.tracing = tracing;
     }
 
     public void setPath(String path) {
@@ -79,11 +79,11 @@ public class CasePhoto extends BaseModel {
 
     @Override
     public String toString() {
-        return "CasePhoto{" +
+        return "TracingPhoto{" +
                 "id=" + id +
                 ", photo=" + photo +
                 ", thumbnail=" + thumbnail +
-                ", tracing=" + aCase +
+                ", tracing=" + tracing +
                 ", path='" + path + '\'' +
                 '}';
     }

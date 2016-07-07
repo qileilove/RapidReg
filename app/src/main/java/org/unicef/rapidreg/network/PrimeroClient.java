@@ -1,7 +1,7 @@
 package org.unicef.rapidreg.network;
 
 import org.unicef.rapidreg.forms.CaseFormRoot;
-import org.unicef.rapidreg.forms.TracingRequestFormRoot;
+import org.unicef.rapidreg.forms.TracingFormRoot;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
 
@@ -25,7 +25,7 @@ public interface PrimeroClient {
             @Query("parent_form") String parentForm);
 
     @GET("/api/form_sections")
-    Call<TracingRequestFormRoot> getTracingRequestForm(
+    Call<TracingFormRoot> getTracingRequestForm(
             @Header("Cookie") String cookie,
             @Query("locale") String locale,
             @Query("mobile") Boolean isMobile,

@@ -21,18 +21,18 @@ import org.unicef.rapidreg.event.NeedDoLoginOffLineEvent;
 import org.unicef.rapidreg.event.NeedGoToLoginSuccessScreenEvent;
 import org.unicef.rapidreg.event.NeedLoadFormsEvent;
 import org.unicef.rapidreg.forms.CaseFormRoot;
-import org.unicef.rapidreg.forms.TracingRequestFormRoot;
+import org.unicef.rapidreg.forms.TracingFormRoot;
 import org.unicef.rapidreg.model.CaseForm;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
-import org.unicef.rapidreg.model.TracingRequestForm;
+import org.unicef.rapidreg.model.TracingForm;
 import org.unicef.rapidreg.model.User;
 import org.unicef.rapidreg.network.HttpStatusCodeHandler;
 import org.unicef.rapidreg.network.NetworkServiceGenerator;
 import org.unicef.rapidreg.network.NetworkStatusManager;
 import org.unicef.rapidreg.network.PrimeroClient;
 import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.TracingRequestFormService;
+import org.unicef.rapidreg.service.TracingFormService;
 import org.unicef.rapidreg.service.UserService;
 import org.unicef.rapidreg.utils.EncryptHelper;
 
@@ -160,16 +160,16 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
             }
         });
 
-        Call<TracingRequestFormRoot> tracingRequestCall = client.getTracingRequestForm(event.getCookie(),
+        Call<TracingFormRoot> tracingRequestCall = client.getTracingRequestForm(event.getCookie(),
                 Locale.getDefault().getLanguage(), true, "tracing_request");
 
-        tracingRequestCall.enqueue(new Callback<TracingRequestFormRoot>() {
+        tracingRequestCall.enqueue(new Callback<TracingFormRoot>() {
             @Override
-            public void onResponse(Call<TracingRequestFormRoot> call, Response<TracingRequestFormRoot> response) {
+            public void onResponse(Call<TracingFormRoot> call, Response<TracingFormRoot> response) {
                 if (response.isSuccessful()) {
-                    TracingRequestFormRoot form = response.body();
-                    TracingRequestForm tracingRequestForm = new TracingRequestForm(new Blob(gson.toJson(form).getBytes()));
-                    TracingRequestFormService.getInstance().saveOrUpdateCaseForm(tracingRequestForm);
+                    TracingFormRoot form = response.body();
+                    TracingForm tracingForm = new TracingForm(new Blob(gson.toJson(form).getBytes()));
+                    TracingFormService.getInstance().saveOrUpdateCaseForm(tracingForm);
 
                     EventBus.getDefault().unregister(this);
                     Log.i(TAG, "load  tracing request form successfully");
@@ -180,7 +180,7 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
             }
 
             @Override
-            public void onFailure(Call<TracingRequestFormRoot> call, Throwable t) {
+            public void onFailure(Call<TracingFormRoot> call, Throwable t) {
                 if (isViewAttached()) {
                     showNetworkErrorMessage(t, false);
                     showLoadingIndicator(false);

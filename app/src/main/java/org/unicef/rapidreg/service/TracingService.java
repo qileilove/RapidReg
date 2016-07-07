@@ -10,13 +10,14 @@ import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 
-import org.unicef.rapidreg.db.CaseDao;
-import org.unicef.rapidreg.db.CasePhotoDao;
-import org.unicef.rapidreg.db.impl.CaseDaoImpl;
-import org.unicef.rapidreg.db.impl.CasePhotoDaoImpl;
+import org.unicef.rapidreg.db.TracingDao;
+import org.unicef.rapidreg.db.TracingPhotoDao;
+import org.unicef.rapidreg.db.impl.TracingDaoImpl;
+import org.unicef.rapidreg.db.impl.TracingPhotoDaoImpl;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.model.Case;
-import org.unicef.rapidreg.model.CasePhoto;
+import org.unicef.rapidreg.model.Tracing;
+import org.unicef.rapidreg.model.TracingPhoto;
 import org.unicef.rapidreg.service.cache.CasePhotoCache;
 import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
@@ -36,8 +37,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public class CaseService {
-    public static final String TAG = CaseService.class.getSimpleName();
+public class TracingService {
+    public static final String TAG = TracingService.class.getSimpleName();
     public static final String CASE_ID = "Case ID";
     public static final String AGE = "Age";
     public static final String FULL_NAME = "Full Name";
@@ -53,43 +54,43 @@ public class CaseService {
     public static final String PREVIOUS_OWNER = "Previous Owner";
     public static final String MODULE = "Module";
 
-    private static final CaseService CASE_SERVICE = new CaseService();
-    private CaseDao caseDao = new CaseDaoImpl();
-    private CasePhotoDao casePhotoDao = new CasePhotoDaoImpl();
+    private static final TracingService CASE_SERVICE = new TracingService();
+    private TracingDao tracingDao = new TracingDaoImpl();
+    private TracingPhotoDao tracingPhotoDao = new TracingPhotoDaoImpl();
 
-    public static CaseService getInstance() {
+    public static TracingService getInstance() {
         return CASE_SERVICE;
     }
 
-    private CaseService() {
+    private TracingService() {
     }
 
-    public CaseService(CaseDao caseDao) {
-        this.caseDao = caseDao;
+    public TracingService(TracingDao tracingDao) {
+        this.tracingDao = tracingDao;
     }
 
-    public List<Case> getCaseList() {
-        return caseDao.getAllCasesOrderByDate(false);
+    public List<Tracing> getTracingList() {
+        return tracingDao.getAllTracingsOrderByDate(false);
     }
 
-    public List<Case> getCaseListOrderByDateASC() {
-        return caseDao.getAllCasesOrderByDate(true);
+    public List<Tracing> getTracingListOrderByDateASC() {
+        return tracingDao.getAllTracingsOrderByDate(true);
     }
 
-    public List<Case> getCaseListOrderByDateDES() {
-        return caseDao.getAllCasesOrderByDate(false);
+    public List<Tracing> getTracingListOrderByDateDES() {
+        return tracingDao.getAllTracingsOrderByDate(false);
     }
 
-    public List<Case> getCaseListOrderByAgeASC() {
-        return caseDao.getAllCasesOrderByAge(true);
+    public List<Tracing> getTracingListOrderByAgeASC() {
+        return tracingDao.getAllTracingsOrderByAge(true);
     }
 
-    public List<Case> getCaseListOrderByAgeDES() {
-        return caseDao.getAllCasesOrderByAge(false);
+    public List<Tracing> getTracingListOrderByAgeDES() {
+        return tracingDao.getAllTracingsOrderByAge(false);
     }
 
     public Map<String, String> getCaseMapByUniqueId(String uniqueId) {
-        Case child = caseDao.getCaseByUniqueId(uniqueId);
+        Tracing child = tracingDao.getTracingByUniqueId(uniqueId);
         if (child == null) {
             return new HashMap<>();
         }
@@ -103,8 +104,8 @@ public class CaseService {
         return values;
     }
 
-    public List<Case> getSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
-                                      String caregiver, Date date) {
+    public List<Tracing> getSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
+                                         String caregiver, Date date) {
 
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_UNIQUE_ID).build())
@@ -121,7 +122,7 @@ public class CaseService {
                     .build()).eq(date));
         }
 
-        return caseDao.getCaseListByConditionGroup(conditionGroup);
+        return tracingDao.getTracingListByConditionGroup(conditionGroup);
     }
 
     public List<String> fetchRequiredFiledNames(List<Field> caseFields) {
@@ -134,23 +135,23 @@ public class CaseService {
         return result;
     }
 
-    public void saveOrUpdateCase(Map<String, String> values,
-                                 Map<String, List<Map<String, String>>> subformValues,
-                                 Map<Bitmap, String> photoBitPaths) {
+    public void saveOrUpdateTracing(Map<String, String> values,
+                                    Map<String, List<Map<String, String>>> subformValues,
+                                    Map<Bitmap, String> photoBitPaths) {
 
         attachSubforms(values, subformValues);
 
         if (values.get(CASE_ID) == null) {
-            saveCase(values, subformValues, photoBitPaths);
+            saveTracing(values, subformValues, photoBitPaths);
         } else {
             Log.d(TAG, "update the existing case");
             updateCase(values, subformValues, photoBitPaths);
         }
     }
 
-    private void saveCase(Map<String, String> values,
-                          Map<String, List<Map<String, String>>> subformValues,
-                          Map<Bitmap, String> photoBitPaths) {
+    private void saveTracing(Map<String, String> values,
+                             Map<String, List<Map<String, String>>> subformValues,
+                             Map<Bitmap, String> photoBitPaths) {
 
         String username = UserService.getInstance().getCurrentUser().getUsername();
         values.put(MODULE, "primeromodule-cp");
@@ -165,26 +166,26 @@ public class CaseService {
         Blob audioFileDefault = null;
         audioFileDefault = getAudioBlob(audioFileDefault);
 
-        Case child = new Case();
-        child.setUniqueId(createUniqueId());
-        child.setCreateDate(date);
-        child.setLastUpdatedDate(date);
-        child.setContent(caseBlob);
-        child.setName(getChildName(values));
+        Tracing tracing = new Tracing();
+        tracing.setUniqueId(createUniqueId());
+        tracing.setCreateDate(date);
+        tracing.setLastUpdatedDate(date);
+        tracing.setContent(caseBlob);
+        tracing.setName(getTracingName(values));
         int age = values.get(AGE) != null ? Integer.parseInt(values.get(AGE)) : 0;
-        child.setAge(age);
-        child.setCaregiver(getCaregiverName(values));
-        child.setRegistrationDate(getRegisterDate(values));
-        child.setAudio(audioFileDefault);
-        child.setSubform(subformBlob);
-        child.setCreatedBy(username);
-        child.save();
+        tracing.setAge(age);
+        tracing.setCaregiver(getCaregiverName(values));
+        tracing.setRegistrationDate(getRegisterDate(values));
+        tracing.setAudio(audioFileDefault);
+        tracing.setSubform(subformBlob);
+        tracing.setCreatedBy(username);
+        tracing.save();
 
-        saveCasePhoto(child, photoBitPaths);
+        saveCasePhoto(tracing, photoBitPaths);
         FieldValueCache.clearAudioFile();
     }
 
-    public void clearCaseCache() {
+    public void clearCache() {
         FieldValueCache.clear();
         CasePhotoCache.clear();
         SubformCache.clear();
@@ -203,21 +204,21 @@ public class CaseService {
         Blob audioFileDefault = null;
         audioFileDefault = getAudioBlob(audioFileDefault);
 
-        Case child = caseDao.getCaseByUniqueId(values.get(CASE_ID));
-        child.setLastUpdatedDate(new Date(Calendar.getInstance().getTimeInMillis()));
-        child.setContent(caseBlob);
-        child.setName(getChildName(values));
+        Tracing tracing = tracingDao.getTracingByUniqueId(values.get(CASE_ID));
+        tracing.setLastUpdatedDate(new Date(Calendar.getInstance().getTimeInMillis()));
+        tracing.setContent(caseBlob);
+        tracing.setName(getTracingName(values));
         int age = values.get(AGE) != null ? Integer.parseInt(values.get(AGE)) : 0;
-        child.setAge(age);
-        child.setCaregiver(getCaregiverName(values));
-        child.setRegistrationDate(getRegisterDate(values));
-        child.setAudio(audioFileDefault);
-        child.setSubform(subformBlob);
-        child.update();
+        tracing.setAge(age);
+        tracing.setCaregiver(getCaregiverName(values));
+        tracing.setRegistrationDate(getRegisterDate(values));
+        tracing.setAudio(audioFileDefault);
+        tracing.setSubform(subformBlob);
+        tracing.update();
 
-        casePhotoDao.deleteCasePhotosByCaseId(child.getId());
+        tracingPhotoDao.deleteTracingPhotosByCaseId(tracing.getId());
         FieldValueCache.clearAudioFile();
-        saveCasePhoto(child, photoBitPaths);
+        saveCasePhoto(tracing, photoBitPaths);
     }
 
     private Blob getAudioBlob(Blob blob) {
@@ -229,16 +230,16 @@ public class CaseService {
         return blob;
     }
 
-    private void saveCasePhoto(Case child, Map<Bitmap, String> photoBitPaths) {
+    private void saveCasePhoto(Tracing tracing, Map<Bitmap, String> photoBitPaths) {
         if (photoBitPaths == null) {
             return;
         }
 
         for (Map.Entry<Bitmap, String> photoBitPathEntry : photoBitPaths.entrySet()) {
             try {
-                CasePhoto casePhoto = new CasePhoto();
+                TracingPhoto tracingPhoto = new TracingPhoto();
                 String filePath = photoBitPathEntry.getValue();
-                casePhoto.setPath(filePath);
+                tracingPhoto.setPath(filePath);
 
                 Bitmap bitmap = ImageCompressUtil.compressImage(filePath,
                         CasePhotoCache.MAX_WIDTH, CasePhotoCache.MAX_HEIGHT,
@@ -246,10 +247,10 @@ public class CaseService {
 
                 byte[] imageToBytes = ImageCompressUtil.convertImageToBytes(bitmap);
 
-                casePhoto.setPhoto(new Blob(imageToBytes));
-                casePhoto.setThumbnail(new Blob(ImageCompressUtil.convertImageToBytes(photoBitPathEntry.getKey())));
-                casePhoto.setCase(child);
-                casePhoto.save();
+                tracingPhoto.setPhoto(new Blob(imageToBytes));
+                tracingPhoto.setThumbnail(new Blob(ImageCompressUtil.convertImageToBytes(photoBitPathEntry.getKey())));
+                tracingPhoto.setTracing(tracing);
+                tracingPhoto.save();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -275,7 +276,7 @@ public class CaseService {
         return getCurrentDate();
     }
 
-    private String getChildName(Map<String, String> values) {
+    private String getTracingName(Map<String, String> values) {
         return values.get(FULL_NAME) + " "
                 + values.get(FIRST_NAME) + " "
                 + values.get(MIDDLE_NAME) + " "

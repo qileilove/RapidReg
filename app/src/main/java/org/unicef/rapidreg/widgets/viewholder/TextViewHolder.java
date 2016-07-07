@@ -12,7 +12,7 @@ import android.widget.ViewSwitcher;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +55,7 @@ public class TextViewHolder extends BaseTextViewHolder {
         if (isSubformField(field)) {
             valueView.setText(getValue(field));
         } else {
-            valueView.setText(CaseFieldValueCache.get(field.getName()));
+            valueView.setText(FieldValueCache.get(field.getName()));
         }
         if (TextUtils.isEmpty(valueView.getText())) {
             viewSwitcher.setDisplayedChild(GenericViewHolder.FORM_NO_ANSWER_STATE);

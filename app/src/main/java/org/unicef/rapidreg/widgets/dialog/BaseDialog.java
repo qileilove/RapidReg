@@ -9,16 +9,15 @@ import android.widget.ViewSwitcher;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
+import org.unicef.rapidreg.service.cache.FieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
+import org.unicef.rapidreg.widgets.viewholder.GenericViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.unicef.rapidreg.widgets.viewholder.GenericViewHolder;
 
 public abstract class BaseDialog {
     protected Field caseField;
@@ -57,7 +56,7 @@ public abstract class BaseDialog {
                     SubformCache.put(caseField.getParent(), getValues());
                 } else {
                     String language = Locale.getDefault().getLanguage();
-                    CaseFieldValueCache.put(caseField.getName(), getResult());
+                    FieldValueCache.put(caseField.getName(), getResult());
                 }
 
                 dialog.dismiss();

@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CaseFieldValueCache {
+public class FieldValueCache {
 
     public static class CaseProfile {
         public static final String ID_NORMAL_STATE = "_id_normal_state";
@@ -53,7 +53,7 @@ public class CaseFieldValueCache {
         caseProfile.put(key, value);
     }
 
-    public static String getProfileValue(String key){
+    public static String getProfileValue(String key) {
         return caseProfile.get(key);
     }
 }

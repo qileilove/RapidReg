@@ -9,17 +9,17 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.unicef.rapidreg.db.PrimeroDB;
 
 @Table(database = PrimeroDB.class)
-public class TracingRequestForm extends BaseModel {
+public class TracingForm extends BaseModel {
     @PrimaryKey(autoincrement = true)
     private long id;
 
     @Column(name = "form_json")
     private Blob form;
 
-    public TracingRequestForm() {
+    public TracingForm() {
     }
 
-    public TracingRequestForm(Blob form) {
+    public TracingForm(Blob form) {
         this.form = form;
     }
 

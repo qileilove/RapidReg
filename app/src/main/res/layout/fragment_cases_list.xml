@@ -51,7 +51,7 @@
         app:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_tracing_request"
+            android:id="@+id/add_tracing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollY="3dp"
