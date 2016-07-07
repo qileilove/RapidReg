@@ -107,6 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 navigationView.setItemTextColor(caseColor);
                 break;
             case R.id.nav_tracing:
+                navTracingRequestAction();
                 navigationView.setItemTextColor(trColor);
                 break;
             case R.id.nav_sync:
@@ -120,9 +121,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         return true;
     }
 
-
     public PrimeroApplication getContext() {
         return (PrimeroApplication) getApplication();
+    }
+
+    public void setNavMenuItem(int resId) {
+        navigationView.setCheckedItem(resId);
+        navigationView.setItemTextColor(getItemColor(resId));
     }
 
     protected void logOut(BaseActivity currentActivity) {
@@ -131,6 +136,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         UserService.getInstance().setCurrentUser(null);
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         intentSender.showLoginActivity(currentActivity);
+    }
+
+    private ColorStateList getItemColor(int resId) {
+        switch (resId) {
+            case R.id.nav_cases:
+                return caseColor;
+            case R.id.nav_tracing:
+                return trColor;
+            case R.id.nav_sync:
+                return syncColor;
+            default:
+                return null;
+        }
     }
 
     //TODO: Put logout into basePresenter in future
@@ -158,6 +176,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected abstract void navSyncAction();
 
     protected abstract void navCaseAction();
+
+    protected abstract void navTracingRequestAction();
 
     protected abstract void processBackButton();
 

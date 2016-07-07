@@ -143,6 +143,15 @@ public class CaseActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void navTracingRequestAction() {
+        if (currentFeature.isInDetailMode()) {
+            showQuitDialog(R.id.nav_cases);
+        } else {
+            CaseFieldValueCache.clearAudioFile();
+            intentSender.showTracingRequestActivity(this);
+        }
+    }
 
     @Override
     protected void navSyncAction() {
@@ -181,7 +190,7 @@ public class CaseActivity extends BaseActivity {
                             case R.id.nav_cases:
                                 turnToFeature(CaseFeature.LIST);
                                 break;
-                            case R.id.nav_sync :
+                            case R.id.nav_sync:
                                 intentSender.showSyncActivity(CaseActivity.this);
                                 break;
                             default:
@@ -194,6 +203,8 @@ public class CaseActivity extends BaseActivity {
     }
 
     private void initToolbar() {
+        setNavMenuItem(R.id.nav_cases);
+
         toolbar.inflateMenu(R.menu.toolbar_main);
         toolbar.setOnMenuItemClickListener(new CaseMenuItemListener());
 

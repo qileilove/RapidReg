@@ -6,6 +6,7 @@ import android.content.Intent;
 import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.login.LoginActivity;
 import org.unicef.rapidreg.sync.SyncActivity;
+import org.unicef.rapidreg.tracing.TracingRequestActivity;
 
 public class IntentSender {
     public static final String USER_NAME = "userName";
@@ -24,6 +25,10 @@ public class IntentSender {
 
     public void showSyncActivity(Activity context) {
         showActivity(context, SyncActivity.class, null);
+    }
+
+    public void showTracingRequestActivity(Activity context) {
+        showActivity(context, TracingRequestActivity.class, null);
     }
 
     private void showActivity(Activity context, Class<?> cls, Intent intent) {
