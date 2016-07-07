@@ -23,8 +23,8 @@ import android.widget.Toast;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.base.view.BaseActivity;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
-import org.unicef.rapidreg.forms.childcase.CaseSection;
+import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
@@ -266,7 +266,7 @@ public class CaseActivity extends BaseActivity {
         CaseFormRoot caseForm = CaseFormService.getInstance().getCurrentForm();
         List<String> requiredFieldNames = new ArrayList<>();
 
-        for (CaseSection section : caseForm.getSections()) {
+        for (Section section : caseForm.getSections()) {
             Collections.addAll(requiredFieldNames, CaseService.getInstance()
                     .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
         }

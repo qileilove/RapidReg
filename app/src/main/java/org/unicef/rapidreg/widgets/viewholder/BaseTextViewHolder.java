@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseTextViewHolder extends BaseViewHolder<CaseField> {
+public abstract class BaseTextViewHolder extends BaseViewHolder<Field> {
     public BaseTextViewHolder(Context context, View itemView) {
         super(context, itemView);
     }
 
-    protected List<Map<String, String>> getValues(CaseField field) {
+    protected List<Map<String, String>> getValues(Field field) {
         List<Map<String, String>> values = SubformCache.get(field.getParent()) == null ?
                 new ArrayList<Map<String, String>>() : SubformCache.get(field.getParent());
 
@@ -37,7 +37,7 @@ public abstract class BaseTextViewHolder extends BaseViewHolder<CaseField> {
         return values;
     }
 
-    protected void saveValues(final CaseField field) {
+    protected void saveValues(final Field field) {
         if (TextUtils.isEmpty(getValueView().getText())) {
             return;
         }

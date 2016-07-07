@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unicef.rapidreg.db.CaseDao;
 import org.unicef.rapidreg.db.impl.CaseDaoImpl;
-import org.unicef.rapidreg.forms.childcase.CaseField;
-import org.unicef.rapidreg.forms.childcase.CaseSection;
+import org.unicef.rapidreg.forms.Field;
+import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.model.Case;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class CaseServiceTest {
 
     @Test
     public void should_get_required_filed_list_when_exist_in_case_fields() {
-        List<CaseField> caseFields = new CaseSection().getFields();
+        List<Field> caseFields = new Section().getFields();
         caseFields.add(makeCaseField("age", true));
         caseFields.add(makeCaseField("sex", true));
         caseFields.add(makeCaseField("name", false));
@@ -62,7 +62,7 @@ public class CaseServiceTest {
 
     @Test
     public void should_get_empty_required_filed_list_when_does_not_exist_in_case_fields() {
-        List<CaseField> caseFields = new CaseSection().getFields();
+        List<Field> caseFields = new Section().getFields();
         caseFields.add(makeCaseField("age", false));
         caseFields.add(makeCaseField("sex", false));
         caseFields.add(makeCaseField("name", false));
@@ -72,8 +72,8 @@ public class CaseServiceTest {
     }
 
 
-    private CaseField makeCaseField(String name, boolean required) {
-        CaseField caseField = new CaseField();
+    private Field makeCaseField(String name, boolean required) {
+        Field caseField = new Field();
         caseField.setRequired(required);
         HashMap<String, String> displayNames = new HashMap<>();
         displayNames.put("en", name);

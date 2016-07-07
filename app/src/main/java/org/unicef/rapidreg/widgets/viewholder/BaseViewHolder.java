@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
 import java.util.ArrayList;
@@ -30,15 +30,15 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
 
     public abstract void setOnClickListener(T field);
 
-    protected String getLabel(CaseField field) {
+    protected String getLabel(Field field) {
         return field.getDisplayName().get(Locale.getDefault().getLanguage());
     }
 
-    protected boolean isEditable(CaseField field) {
+    protected boolean isEditable(Field field) {
         return field.isEditable();
     }
 
-    protected boolean isRequired(CaseField field) {
+    protected boolean isRequired(Field field) {
         return field.isRequired();
     }
 
@@ -64,11 +64,11 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
         }
     }
 
-    protected boolean isSubformField(CaseField field) {
+    protected boolean isSubformField(Field field) {
         return field.getParent() != null;
     }
 
-    protected String getValue(CaseField field) {
+    protected String getValue(Field field) {
         List<Map<String, String>> values = SubformCache.get(field.getParent()) == null ?
                 new ArrayList<Map<String, String>>() : SubformCache.get(field.getParent());
         Map<String, String> value;
@@ -82,7 +82,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
         return value.get(field.getName());
     }
 
-    protected List<Map<String, String>> getValues(CaseField field) {
+    protected List<Map<String, String>> getValues(Field field) {
         String language = Locale.getDefault().getLanguage();
         List<Map<String, String>> values = SubformCache.get(field.getParent()) == null ?
                 new ArrayList<Map<String, String>>() : SubformCache.get(field.getParent());

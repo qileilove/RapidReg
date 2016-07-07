@@ -9,9 +9,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.unicef.rapidreg.db.CaseFormDao;
 import org.unicef.rapidreg.db.impl.CaseFormDaoImpl;
-import org.unicef.rapidreg.forms.childcase.CaseField;
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
-import org.unicef.rapidreg.forms.childcase.CaseSection;
+import org.unicef.rapidreg.forms.Field;
+import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.forms.Section;
 
 import java.io.IOException;
 
@@ -80,13 +80,13 @@ public class CaseFormServiceTest {
 
         assertThat(form.getSections().size(), is(1));
 
-        CaseSection caseSection = form.getSections().get(0);
+        Section caseSection = form.getSections().get(0);
         assertThat(caseSection.getName().get("en"), is("Basic Identity"));
         assertThat(caseSection.getOrder(), is(10));
         assertThat(caseSection.getHelpText().get("en"), is(""));
         assertThat(caseSection.getBaseLanguage(), is("en"));
 
-        CaseField caseField = caseSection.getFields().get(0);
+        Field caseField = caseSection.getFields().get(0);
         assertThat(caseField.getName(), is("case_id"));
         assertThat(caseField.getDisplayName().get("en"), is("Long ID"));
         assertThat(caseField.getHelpText().get("en"), is(""));

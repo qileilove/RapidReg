@@ -6,12 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.raizlabs.android.dbflow.data.Blob;
 
-import org.unicef.rapidreg.db.CaseFormDao;
 import org.unicef.rapidreg.db.TracingRequestFormDao;
-import org.unicef.rapidreg.db.impl.CaseFormDaoImpl;
 import org.unicef.rapidreg.db.impl.TracingRequestFormDaoImpl;
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
-import org.unicef.rapidreg.model.CaseForm;
 import org.unicef.rapidreg.model.TracingRequestForm;
 
 public class TracingRequestFormService {

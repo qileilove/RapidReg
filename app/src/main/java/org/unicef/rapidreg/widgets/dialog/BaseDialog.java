@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -18,23 +18,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.widgets.viewholder.GenericViewHolder;
 
 public abstract class BaseDialog {
-    protected CaseField caseField;
+    protected Field caseField;
     protected TextView resultView;
     protected ViewSwitcher viewSwitcher;
 
     private AlertDialog.Builder builder;
     private Context context;
 
-    public BaseDialog(final Context context, final CaseField caseField,
+    public BaseDialog(final Context context, final Field caseField,
                       final TextView resultView) {
         this(context, caseField, resultView, null);
     }
 
-    public BaseDialog(final Context context, final CaseField caseField,
+    public BaseDialog(final Context context, final Field caseField,
                       final TextView resultView, final ViewSwitcher viewSwitcher) {
         this.caseField = caseField;
         this.resultView = resultView;
@@ -78,7 +77,7 @@ public abstract class BaseDialog {
         builder.show();
     }
 
-    public static String[] getSelectOptions(String fieldType, CaseField field) {
+    public static String[] getSelectOptions(String fieldType, Field field) {
         String language = Locale.getDefault().getLanguage();
         List<CharSequence> items = new ArrayList<>();
 

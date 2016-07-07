@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.forms.tracing_request;
+package org.unicef.rapidreg.forms;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TracingRequestSection {
+public class Section {
     @SerializedName("name")
     @Expose
     private Map<String, String> name;
@@ -22,7 +22,7 @@ public class TracingRequestSection {
     private String baseLanguage;
     @SerializedName("fields")
     @Expose
-    private List<TracingRequestField> fields = new ArrayList<>();
+    private List<Field> fields = new ArrayList<>();
 
     public Map<String, String> getName() {
         return name;
@@ -56,11 +56,11 @@ public class TracingRequestSection {
         this.baseLanguage = baseLanguage;
     }
 
-    public List<TracingRequestField> getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 
-    public void setFields(List<TracingRequestField> fields) {
+    public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
@@ -71,7 +71,7 @@ public class TracingRequestSection {
         sb.append("order: ").append(order).append("\n");
         sb.append("helpText: ").append(helpText).append("\n");
         sb.append("baseLanguage: ").append(baseLanguage).append("\n");
-        for (TracingRequestField field : fields) {
+        for (Field field : fields) {
             sb.append(field);
         }
 

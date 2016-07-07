@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import android.widget.LinearLayout;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.childcase.CaseActivity;
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.service.CasePhotoService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
@@ -28,7 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<CaseField> implements ViewPager.OnPageChangeListener {
+public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> implements ViewPager.OnPageChangeListener {
     public static final String TAG = PhotoUploadMiniFormViewHolder.class.getSimpleName();
 
     @BindView(R.id.case_photo_view_slider)
@@ -51,7 +50,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<CaseField> imp
     }
 
     @Override
-    public void setValue(CaseField field) {
+    public void setValue(Field field) {
         viewPager.setAdapter(new CasePhotoViewPagerAdapter());
         viewPager.addOnPageChangeListener(this);
         if (!isPhotosPrepared) {
@@ -93,7 +92,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<CaseField> imp
     }
 
     @Override
-    public void setOnClickListener(CaseField field) {
+    public void setOnClickListener(Field field) {
 
     }
 
