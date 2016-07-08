@@ -46,7 +46,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
         super(context, itemView);
         ButterKnife.bind(this, itemView);
         caseActivity = (CaseActivity) context;
-        caseActivity.findViewById(R.id.edit_case).setVisibility(View.INVISIBLE);
+        caseActivity.findViewById(R.id.edit).setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
 
             if (CasePhotoCache.size() == 0) {
                 imageView.setImageResource(R.drawable.photo_placeholder);
-                caseActivity.findViewById(R.id.edit_case).setVisibility(View.VISIBLE);
+                caseActivity.findViewById(R.id.edit).setVisibility(View.VISIBLE);
                 return itemView;
             }
 
@@ -195,7 +195,7 @@ public class PhotoUploadMiniFormViewHolder extends BaseViewHolder<Field> impleme
                 renderPhoto(imageView, position);
                 CasePhotoViewPagerAdapter.this.notifyDataSetChanged();
                 if (isPhotosPrepared) {
-                    caseActivity.findViewById(R.id.edit_case).setVisibility(View.VISIBLE);
+                    caseActivity.findViewById(R.id.edit).setVisibility(View.VISIBLE);
                 }
             }
         }

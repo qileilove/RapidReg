@@ -55,7 +55,7 @@ public class CaseRegisterWrapperFragment extends Fragment {
     @BindView(R.id.mini_form_container)
     RecyclerView miniFormContainer;
 
-    @BindView(R.id.edit_case)
+    @BindView(R.id.edit)
     FloatingActionButton editCaseButton;
 
     private CaseFormRoot caseForm;
@@ -80,7 +80,7 @@ public class CaseRegisterWrapperFragment extends Fragment {
         return view;
     }
 
-    @OnClick(R.id.edit_case)
+    @OnClick(R.id.edit)
     public void onCaseEditClicked() {
         ((CaseActivity) getActivity()).turnToFeature(CaseFeature.EDIT);
     }
@@ -180,7 +180,9 @@ public class CaseRegisterWrapperFragment extends Fragment {
                 }
             }
         }
-        addProfileFieldForDetailsPage();
+        if (!miniFields.isEmpty()) {
+            addProfileFieldForDetailsPage();
+        }
     }
 
     private void addProfileFieldForDetailsPage() {

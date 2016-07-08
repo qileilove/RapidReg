@@ -55,8 +55,8 @@ public class TracingRequestRegisterWrapperFragment extends Fragment {
     @BindView(R.id.mini_form_container)
     RecyclerView miniFormContainer;
 
-    @BindView(R.id.edit_case)
-    FloatingActionButton editCaseButton;
+    @BindView(R.id.edit)
+    FloatingActionButton editButton;
 
     private TracingFormRoot tracingForm;
     private List<Section> sections;
@@ -72,7 +72,7 @@ public class TracingRequestRegisterWrapperFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_cases_register_wrapper, container, false);
         ButterKnife.bind(this, view);
-        initCaseFormData();
+        initFormData();
         initFloatingActionButton();
         miniFormAdapter = new TracingRequestRegisterAdapter(getActivity(), miniFields, true);
         initFullFormContainer();
@@ -80,16 +80,16 @@ public class TracingRequestRegisterWrapperFragment extends Fragment {
         return view;
     }
 
-    @OnClick(R.id.edit_case)
+    @OnClick(R.id.edit)
     public void onCaseEditClicked() {
         ((TracingRequestActivity) getActivity()).turnToFeature(TracingRequestFeature.EDIT);
     }
 
     private void initFloatingActionButton() {
         if (((TracingRequestActivity) getActivity()).getCurrentFeature() == TracingRequestFeature.DETAILS) {
-            editCaseButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.VISIBLE);
         } else {
-            editCaseButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.GONE);
         }
     }
 
@@ -159,7 +159,7 @@ public class TracingRequestRegisterWrapperFragment extends Fragment {
         }
     }
 
-    private void initCaseFormData() {
+    private void initFormData() {
         tracingForm = TracingFormService.getInstance().getCurrentForm();
         sections = tracingForm.getSections();
         miniFields = new ArrayList<>();
@@ -180,17 +180,19 @@ public class TracingRequestRegisterWrapperFragment extends Fragment {
                 }
             }
         }
-        addProfileFieldForDetailsPage();
+        if (!miniFields.isEmpty()) {
+            addProfileFieldForDetailsPage();
+        }
     }
 
     private void addProfileFieldForDetailsPage() {
         if (((TracingRequestActivity) getActivity()).getCurrentFeature() == TracingRequestFeature.DETAILS) {
-            Field caseField = new Field();
-            caseField.setType(Field.TYPE_MINI_FORM_PROFILE);
+            Field tracingField = new Field();
+            tracingField.setType(Field.TYPE_MINI_FORM_PROFILE);
             try {
-                miniFields.add(1, caseField);
+                miniFields.add(1, tracingField);
             } catch (Exception e) {
-                miniFields.add(caseField);
+                miniFields.add(tracingField);
             }
         }
     }
