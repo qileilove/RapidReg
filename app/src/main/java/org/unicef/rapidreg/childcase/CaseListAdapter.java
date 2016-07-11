@@ -117,7 +117,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
                 CasePhotoService.getInstance().setCaseId(caseItem.getId());
 
-                activity.turnToDetailOrEditPage(CaseFeature.DETAILS, caseItem.getId());
+                activity.turnToDetailOrEditPage(Feature.DETAILS, caseItem.getId());
 
                 try {
                     CaseFieldValueCache.clearAudioFile();

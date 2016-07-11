@@ -120,7 +120,7 @@ public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         CaseField field = fields.get(position);
         holder.setValue(field);
 
-        if (!activity.getCurrentFeature().isInDetailMode()) {
+        if (!activity.getCurrentFeature().isDetailMode()) {
             holder.setOnClickListener(field);
         } else {
             holder.setFieldEditable(false);
@@ -149,7 +149,7 @@ public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             return VIEW_HOLDER_TICK_BOX;
         }
         if (field.isPhotoUploadBox()) {
-            if (activity.getCurrentFeature() != CaseFeature.DETAILS) {
+            if (activity.getCurrentFeature() != Feature.DETAILS) {
                 return VIEW_HOLDER_PHOTO_UPLOAD_BOX;
             }
             return isMiniForm ? VIEW_HOLDER_PHOTO_UPLOAD_BOX_MINI_FORM : VIEW_HOLDER_PHOTO_UPLOAD_BOX;

@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
+public class SearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
         implements CaseListView {
-    public static final String TAG = CaseSearchFragment.class.getSimpleName();
+    public static final String TAG = SearchFragment.class.getSimpleName();
 
     private static final int HAVE_RESULT_LIST = 0;
     private static final int HAVE_NO_RESULT = 1;

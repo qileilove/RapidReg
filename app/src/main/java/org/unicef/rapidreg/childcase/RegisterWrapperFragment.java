@@ -18,7 +18,6 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
-import com.raizlabs.android.dbflow.list.FlowCursorList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CaseRegisterWrapperFragment extends Fragment {
+public class RegisterWrapperFragment extends Fragment {
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
@@ -120,7 +119,7 @@ public class CaseRegisterWrapperFragment extends Fragment {
 
     @OnClick(R.id.edit_case)
     public void onCaseEditClicked() {
-        ((CaseActivity) getActivity()).turnToDetailOrEditPage(CaseFeature.EDIT, caseId);
+        ((CaseActivity) getActivity()).turnToDetailOrEditPage(Feature.EDIT, caseId);
     }
 
     private CasePhotoAdapter initCasePhotoAdapter() {
@@ -159,7 +158,7 @@ public class CaseRegisterWrapperFragment extends Fragment {
     }
 
     private void initFloatingActionButton() {
-        if (((CaseActivity) getActivity()).getCurrentFeature() == CaseFeature.DETAILS) {
+        if (((CaseActivity) getActivity()).getCurrentFeature() == Feature.DETAILS) {
             editCaseButton.setVisibility(View.VISIBLE);
         } else {
             editCaseButton.setVisibility(View.GONE);
@@ -260,7 +259,7 @@ public class CaseRegisterWrapperFragment extends Fragment {
     }
 
     private void addProfileFieldForDetailsPage() {
-        if (((CaseActivity) getActivity()).getCurrentFeature() == CaseFeature.DETAILS) {
+        if (((CaseActivity) getActivity()).getCurrentFeature() == Feature.DETAILS) {
             CaseField caseField = new CaseField();
             caseField.setType(CaseField.TYPE_MINI_FORM_PROFILE);
             try {

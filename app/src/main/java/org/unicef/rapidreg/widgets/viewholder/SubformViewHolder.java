@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -95,7 +94,7 @@ public class SubformViewHolder extends BaseViewHolder<CaseField> {
                 updateIndexForFields();
             }
         });
-        deleteBtn.setVisibility(activity.getCurrentFeature().isInEditMode() ?
+        deleteBtn.setVisibility(activity.getCurrentFeature().isEditMode() ?
                 View.VISIBLE : View.GONE);
     }
 

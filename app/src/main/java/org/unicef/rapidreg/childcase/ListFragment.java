@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresenter>
+public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
         implements CaseListView {
 
     private static final SpinnerState[] SPINNER_STATES = {
@@ -173,7 +173,7 @@ public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresente
         floatingMenu.collapseImmediately();
 
         CaseActivity activity = (CaseActivity) getActivity();
-        activity.turnToFeature(CaseFeature.ADD, null);
+        activity.turnToFeature(Feature.ADD, null);
     }
 
     public void toggleMode(boolean isShow) {

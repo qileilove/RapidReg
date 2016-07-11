@@ -1,19 +1,9 @@
 package org.unicef.rapidreg.childcase;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,11 +17,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.BaseActivity;
-import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
 import org.unicef.rapidreg.event.NeedLoadFormsEvent;
 import org.unicef.rapidreg.event.SaveCaseEvent;
-import org.unicef.rapidreg.event.UpdateImageEvent;
 import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
 import org.unicef.rapidreg.forms.childcase.CaseSection;
 import org.unicef.rapidreg.model.CaseForm;
@@ -39,11 +26,7 @@ import org.unicef.rapidreg.network.AuthService;
 import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
-import org.unicef.rapidreg.utils.ImageCompressUtil;
-import org.unicef.rapidreg.widgets.viewholder.PhotoUploadViewHolder;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,16 +39,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class CaseActivity extends BaseActivity {
+
+public class CaseActivity extends RequestActivity {
     public static final String TAG = CaseActivity.class.getSimpleName();
-    private DetailState textAreaState = DetailState.VISIBILITY;
-
-    private MenuItem caseSaveMenu;
-    private MenuItem caseSearchMenu;
-    private MenuItem caseToggleMenu;
-
-    private String imagePath;
-    private CaseFeature currentFeature;
 
     private CompositeSubscription subscriptions;
 
@@ -73,9 +49,8 @@ public class CaseActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         subscriptions = new CompositeSubscription();
-        initToolbar();
-        turnToFeature(CaseFeature.LIST, null);
 
+        turnToFeature(Feature.LIST, null);
         EventBus.getDefault().register(this);
     }
 
@@ -84,86 +59,12 @@ public class CaseActivity extends BaseActivity {
         super.onDestroy();
 
         EventBus.getDefault().unregister(this);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (Activity.RESULT_OK != resultCode) {
-            return;
-        }
-
-        if (PhotoUploadViewHolder.REQUEST_CODE_GALLERY == requestCode) {
-            onSelectFromGalleryResult(data);
-
-        } else if (PhotoUploadViewHolder.REQUEST_CODE_CAMERA == requestCode) {
-            onCaptureImageResult();
-        }
-    }
-
-    private void onSelectFromGalleryResult(Intent data) {
-        Uri uri = data.getData();
-        if (!TextUtils.isEmpty(uri.getAuthority())) {
-            Cursor cursor = getContentResolver().query(uri,
-                    new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-            cursor.moveToFirst();
-            imagePath = cursor.getString(cursor
-                    .getColumnIndex(MediaStore.Images.Media.DATA));
-            cursor.close();
-            postSelectedImagePath();
-        }
-    }
-
-    private void onCaptureImageResult() {
-        try {
-            Bitmap bitmap = BitmapFactory.decodeFile(CasePhotoConfig.MEDIA_PATH_FOR_CAMERA);
-            imagePath = getOutputMediaFilePath();
-            ImageCompressUtil.storeImage(bitmap, imagePath);
-            bitmap.recycle();
-            postSelectedImagePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void postSelectedImagePath() {
-        UpdateImageEvent event = new UpdateImageEvent();
-        event.setImagePath(imagePath);
-        EventBus.getDefault().postSticky(event);
-    }
-
-    @Override
-    protected void processBackButton() {
-        if (currentFeature.isInListMode()) {
-            logOut(this);
-        } else if (currentFeature.isInEditMode()) {
-            showQuitDialog(R.id.nav_cases);
-        } else {
-            CaseFieldValueCache.clearAudioFile();
-            turnToFeature(CaseFeature.LIST, null);
-        }
-    }
-
-    @Override
-    protected void navCaseAction() {
-        if (currentFeature.isInEditMode()) {
-            showQuitDialog(R.id.nav_cases);
-        } else {
-            CaseFieldValueCache.clearAudioFile();
-            turnToFeature(CaseFeature.LIST, null);
-        }
+        subscriptions.clear();
     }
 
     @Override
     protected void navSyncAction() {
-        if (currentFeature.isInEditMode()) {
+        if (currentFeature.isEditMode()) {
             showQuitDialog(R.id.nav_sync);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -171,7 +72,40 @@ public class CaseActivity extends BaseActivity {
         }
     }
 
-    public void turnToDetailOrEditPage(CaseFeature feature, long caseId) {
+    @Override
+    protected void navCaseAction() {
+        if (currentFeature.isEditMode()) {
+            showQuitDialog(R.id.nav_cases);
+        } else {
+            CaseFieldValueCache.clearAudioFile();
+            turnToFeature(Feature.LIST, null);
+        }
+    }
+
+    @Override
+    protected void processBackButton() {
+        if (currentFeature.isListMode()) {
+            logOut(this);
+        } else if (currentFeature.isEditMode()) {
+            showQuitDialog(R.id.nav_cases);
+        } else {
+            CaseFieldValueCache.clearAudioFile();
+            turnToFeature(Feature.LIST, null);
+        }
+    }
+
+    @Override
+    protected void save() {
+        clearFocusToMakeLastFieldSaved();
+
+        if (validateRequiredField()) {
+            SaveCaseEvent event = new SaveCaseEvent();
+            EventBus.getDefault().postSticky(event);
+            turnToFeature(Feature.LIST, null);
+        }
+    }
+
+    public void turnToDetailOrEditPage(Feature feature, long caseId) {
         try {
 
             Bundle args = new Bundle();
@@ -185,115 +119,14 @@ public class CaseActivity extends BaseActivity {
         }
     }
 
-
-    public void turnToFeature(CaseFeature feature, Bundle args) {
-        currentFeature = feature;
-        changeToolbarTitle(feature.getTitleId());
-        changeToolbarIcon(feature);
-        try {
-            Fragment fragment = feature.getFragment();
-            if (args != null) {
-                fragment.setArguments(args);
-            }
-            navToFragment(fragment);
-        } catch (Exception e) {
-            throw new RuntimeException("Fragment navigation error", e);
-        }
-    }
-
-    public CaseFeature getCurrentFeature() {
-        return currentFeature;
-    }
-
-    private void showQuitDialog(final int clickedButton) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.quit)
-                .setMessage(R.string.quit_without_saving)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        CaseFieldValueCache.clearAudioFile();
-                        switch (clickedButton) {
-                            case R.id.nav_cases:
-                                turnToFeature(CaseFeature.LIST, null);
-                                break;
-                            case R.id.nav_sync:
-                                intentSender.showSyncActivity(CaseActivity.this);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    private void initToolbar() {
-        toolbar.inflateMenu(R.menu.toolbar_main);
-        toolbar.setOnMenuItemClickListener(new CaseMenuItemListener());
-
-        caseSaveMenu = toolbar.getMenu().findItem(R.id.save_case);
-        caseSearchMenu = toolbar.getMenu().findItem(R.id.search);
-        caseToggleMenu = toolbar.getMenu().findItem(R.id.toggle);
-    }
-
-    private String getOutputMediaFilePath() {
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-                + File.separator + getApplicationContext().getPackageName());
-        if (!mediaStorageDir.exists()) {
-            mediaStorageDir.mkdirs();
-        }
-        return mediaStorageDir.getPath() + File.separator + System.currentTimeMillis() + ".jpg";
-    }
-
-
-    private class CaseMenuItemListener implements Toolbar.OnMenuItemClickListener {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.toggle:
-                    showHideCaseDetail();
-                    return true;
-                case R.id.search:
-                    turnToFeature(CaseFeature.SEARCH, null);
-                    return true;
-                case R.id.save_case:
-                    return saveCase();
-                default:
-                    return false;
-            }
-        }
-    }
-
-    private void showHideCaseDetail() {
-        textAreaState = textAreaState.getNextState();
-
-        caseToggleMenu.setIcon(textAreaState.getResId());
-        CaseListFragment caseListFragment = (CaseListFragment) getSupportFragmentManager()
-                .findFragmentByTag(CaseListFragment.class.getSimpleName());
-        caseListFragment.toggleMode(textAreaState.isDetailShow());
-    }
-
     private void clearFocusToMakeLastFieldSaved() {
-        CaseRegisterWrapperFragment fragment =
-                (CaseRegisterWrapperFragment) getSupportFragmentManager()
-                        .findFragmentByTag(CaseRegisterWrapperFragment.class.getSimpleName());
+        RegisterWrapperFragment fragment =
+                (RegisterWrapperFragment) getSupportFragmentManager()
+                        .findFragmentByTag(RegisterWrapperFragment.class.getSimpleName());
 
         if (fragment != null) {
             fragment.clearFocus();
         }
-    }
-
-    private boolean saveCase() {
-        clearFocusToMakeLastFieldSaved();
-
-        if (validateRequiredField()) {
-            SaveCaseEvent event = new SaveCaseEvent();
-            EventBus.getDefault().postSticky(event);
-            turnToFeature(CaseFeature.LIST, null);
-        }
-        return true;
     }
 
     private boolean validateRequiredField() {
@@ -315,37 +148,34 @@ public class CaseActivity extends BaseActivity {
         return true;
     }
 
-    private void hideAllToolbarIcons() {
-        caseToggleMenu.setVisible(false);
-        caseSearchMenu.setVisible(false);
-        caseSaveMenu.setVisible(false);
-    }
-
-    private void changeToolbarIcon(CaseFeature feature) {
-        hideAllToolbarIcons();
-
-        switch (feature) {
-            case LIST:
-                caseToggleMenu.setVisible(true);
-                caseSearchMenu.setVisible(true);
-                break;
-            case EDIT:
-            case ADD:
-                caseSaveMenu.setVisible(true);
-                break;
-            default:
-                break;
-        }
+    private void showQuitDialog(final int clickedButton) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.quit)
+                .setMessage(R.string.quit_without_saving)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        CaseFieldValueCache.clearAudioFile();
+                        switch (clickedButton) {
+                            case R.id.nav_cases:
+                                turnToFeature(Feature.LIST, null);
+                                break;
+                            case R.id.nav_sync:
+                                intentSender.showSyncActivity(CaseActivity.this);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1)
     public void onNeedLoadFormsEvent(final NeedLoadFormsEvent event) {
-
+        Log.d("fengbo", "Case Load form");
         EventBus.getDefault().removeStickyEvent(event);
-        final CaseFormService.FormLoadStateMachine stateMachine = event.getStateMachine();
-        stateMachine.addOnce();
-        Log.d(TAG, String.format("this is %s time(s) to load forms", stateMachine.getCurrentNum()));
-
         final Gson gson = new Gson();
 
         subscriptions.add(AuthService.getInstance().getFormRx(event.getCookie(),
@@ -378,44 +208,5 @@ public class CaseActivity extends BaseActivity {
                         Log.i(TAG, throwable.getMessage());
                     }
                 }));
-
-    }
-
-
-    private void changeToolbarTitle(int resId) {
-        toolbar.setTitle(resId);
-    }
-
-    private void navToFragment(Fragment target) {
-        if (target != null) {
-            String tag = target.getClass().getSimpleName();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_content, target, tag).commit();
-        }
-    }
-
-    public enum DetailState {
-        VISIBILITY(R.drawable.visible, true),
-        INVISIBILITY(R.drawable.invisible, false);
-
-        private final int resId;
-        private final boolean isDetailShow;
-
-        DetailState(int resId, boolean isDetailShow) {
-            this.resId = resId;
-            this.isDetailShow = isDetailShow;
-        }
-
-        public DetailState getNextState() {
-            return this == VISIBILITY ? INVISIBILITY : VISIBILITY;
-        }
-
-        public int getResId() {
-            return resId;
-        }
-
-        public boolean isDetailShow() {
-            return isDetailShow;
-        }
     }
 }
