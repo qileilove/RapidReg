@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.CaseActivity;
-import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.SubformCache;
 

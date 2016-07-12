@@ -1,10 +1,9 @@
-package org.unicef.rapidreg.base.view;
+package org.unicef.rapidreg.base;
 
 import android.content.Context;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
-import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.forms.RecordForm;
 import org.unicef.rapidreg.service.CaseFormService;

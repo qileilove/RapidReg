@@ -3,7 +3,7 @@ package org.unicef.rapidreg.tracing;
 import android.support.v4.app.Fragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.Feature;
+import org.unicef.rapidreg.base.Feature;
 import org.unicef.rapidreg.exception.FragmentSwitchException;
 
 public enum TracingFeature implements Feature {

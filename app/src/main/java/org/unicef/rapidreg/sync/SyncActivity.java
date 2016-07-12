@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.BaseActivity;
+import org.unicef.rapidreg.base.BaseActivity;
 
 public class SyncActivity extends BaseActivity {
 

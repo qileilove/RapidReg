@@ -9,7 +9,6 @@ import org.unicef.rapidreg.PrimeroConfiguration;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.Observable;
 

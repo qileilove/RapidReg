@@ -53,7 +53,7 @@ public class CaseFieldValueCache {
         caseProfile.put(key, value);
     }
 
-    public static String getProfileValue(String key){
+    public static String getProfileValue(String key) {
         return caseProfile.get(key);
     }
 }

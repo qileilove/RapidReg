@@ -9,9 +9,11 @@ public class PageModeCached {
 
 
     }
+
     public static void setEditMode() {
         caseMode = CaseMode.EDIT;
     }
+
     public static void setDetailMode() {
         caseMode = CaseMode.DETAIL;
     }

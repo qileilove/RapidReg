@@ -1,6 +1,5 @@
-package org.unicef.rapidreg.base.view;
+package org.unicef.rapidreg.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -84,7 +83,7 @@ public abstract class RecordActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (Activity.RESULT_OK != resultCode) {
+        if (RESULT_OK != resultCode) {
             return;
         }
 

@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.RecordActivity;
+import org.unicef.rapidreg.base.RecordActivity;
 import org.unicef.rapidreg.event.SaveCaseEvent;
 import org.unicef.rapidreg.forms.CaseFormRoot;
 import org.unicef.rapidreg.forms.Section;

@@ -4,9 +4,9 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.RecordListAdapter;
-import org.unicef.rapidreg.base.view.RecordListFragment;
-import org.unicef.rapidreg.base.view.RecordListPresenter;
+import org.unicef.rapidreg.base.RecordListAdapter;
+import org.unicef.rapidreg.base.RecordListFragment;
+import org.unicef.rapidreg.base.RecordListPresenter;
 import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.RecordService;
 

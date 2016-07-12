@@ -18,9 +18,9 @@ import android.widget.ViewSwitcher;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.RecordListAdapter;
-import org.unicef.rapidreg.base.view.RecordListPresenter;
-import org.unicef.rapidreg.base.view.RecordListView;
+import org.unicef.rapidreg.base.RecordListAdapter;
+import org.unicef.rapidreg.base.RecordListPresenter;
+import org.unicef.rapidreg.base.RecordListView;
 import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.widgets.ClearableEditText;

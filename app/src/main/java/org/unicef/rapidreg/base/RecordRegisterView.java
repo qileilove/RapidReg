@@ -1,8 +1,6 @@
-package org.unicef.rapidreg.base.view;
+package org.unicef.rapidreg.base;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
-
-import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 
 public interface RecordRegisterView extends MvpView {
 

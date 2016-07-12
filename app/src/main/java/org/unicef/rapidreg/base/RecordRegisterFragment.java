@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.base.view;
+package org.unicef.rapidreg.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +13,6 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 
 import butterknife.BindView;

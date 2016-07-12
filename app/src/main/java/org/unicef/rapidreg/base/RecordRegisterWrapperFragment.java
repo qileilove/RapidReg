@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.base.view;
+package org.unicef.rapidreg.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,7 +23,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import org.unicef.rapidreg.event.UpdateImageEvent;
 import org.unicef.rapidreg.forms.Field;

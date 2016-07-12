@@ -21,21 +21,32 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SyncFragment extends MvpFragment<SyncView, SyncPresenter> implements SyncView{
+public class SyncFragment extends MvpFragment<SyncView, SyncPresenter> implements SyncView {
 
-    @BindView(R.id.button_sync) Button syncButton;
-    @BindView(R.id.last_sync_time) TextView lastSyncTime;
-    @BindView(R.id.record_count_for_last_sync) TextView countOfLastSync;
-    @BindView(R.id.record_count_for_not_sync) TextView countOfNotSync;
+    @BindView(R.id.button_sync)
+    Button syncButton;
+    @BindView(R.id.last_sync_time)
+    TextView lastSyncTime;
+    @BindView(R.id.record_count_for_last_sync)
+    TextView countOfLastSync;
+    @BindView(R.id.record_count_for_not_sync)
+    TextView countOfNotSync;
     private ProgressDialog syncProgressDialog;
 
-    @BindString(R.string.start_sync_message) String startSyncMessage;
-    @BindString(R.string.confirm_cancel_sync_message) String confirmCancelSyncMessage;
-    @BindString(R.string.deny_button_text) String denyButtonText;
-    @BindString(R.string.confirm_button_text) String confirmButtonText;
-    @BindString(R.string.cancel_button_text) String cancelButtonText;
-    @BindString(R.string.sync_success_message) String syncSuccessMessage;
-    @BindString(R.string.sync_error_message) String syncErrorMessage;
+    @BindString(R.string.start_sync_message)
+    String startSyncMessage;
+    @BindString(R.string.confirm_cancel_sync_message)
+    String confirmCancelSyncMessage;
+    @BindString(R.string.deny_button_text)
+    String denyButtonText;
+    @BindString(R.string.confirm_button_text)
+    String confirmButtonText;
+    @BindString(R.string.cancel_button_text)
+    String cancelButtonText;
+    @BindString(R.string.sync_success_message)
+    String syncSuccessMessage;
+    @BindString(R.string.sync_error_message)
+    String syncErrorMessage;
 
     @Nullable
     @Override

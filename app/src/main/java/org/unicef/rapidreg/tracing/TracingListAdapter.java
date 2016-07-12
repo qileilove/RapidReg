@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.RecordListAdapter;
+import org.unicef.rapidreg.base.RecordListAdapter;
 import org.unicef.rapidreg.childcase.CaseFeature;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.model.RecordModel;

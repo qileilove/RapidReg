@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.base;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.unicef.rapidreg.base.view.RecordActivity;
+import org.unicef.rapidreg.childcase.CaseFeature;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.widgets.viewholder.AudioUploadViewHolder;

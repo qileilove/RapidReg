@@ -1,13 +1,10 @@
 package org.unicef.rapidreg.utils;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
