@@ -116,8 +116,20 @@ public class RecordService {
         return values;
     }
 
-    public List<RecordModel> getSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
-                                             String caregiver, Date date) {
+    public List<RecordModel> getCasesSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
+                                                  String caregiver, Date date) {
+        ConditionGroup searchCondition = getSearchCondition(uniqueId, name, ageFrom, ageTo, caregiver, date);
+        return recordDao.getAllCasesByConditionGroup(searchCondition);
+    }
+
+    public List<RecordModel> getTracingsSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
+                                                     String caregiver, Date date) {
+        ConditionGroup searchCondition = getSearchCondition(uniqueId, name, ageFrom, ageTo, caregiver, date);
+        return recordDao.getAllTracingsByConditionGroup(searchCondition);
+    }
+
+    private ConditionGroup getSearchCondition(String uniqueId, String name, int ageFrom, int ageTo,
+                                              String caregiver, Date date) {
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_UNIQUE_ID).build())
                 .like(getWrappedCondition(uniqueId)));
@@ -133,7 +145,7 @@ public class RecordService {
                     .build()).eq(date));
         }
 
-        return recordDao.getAllCasesByConditionGroup(conditionGroup);
+        return conditionGroup;
     }
 
     public List<String> fetchRequiredFiledNames(List<Field> fields) {

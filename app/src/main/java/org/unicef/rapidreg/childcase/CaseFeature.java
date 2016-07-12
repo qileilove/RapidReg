@@ -11,7 +11,7 @@ public enum CaseFeature implements Feature {
     ADD(R.string.new_case, CaseRegisterWrapperFragment.class),
     EDIT(R.string.edit, CaseRegisterWrapperFragment.class),
     DETAILS(R.string.case_details, CaseRegisterWrapperFragment.class),
-    SEARCH(R.string.search, SearchFragment.class);
+    SEARCH(R.string.search, CaseSearchFragment.class);
 
     private int titleId;
     private Class clz;

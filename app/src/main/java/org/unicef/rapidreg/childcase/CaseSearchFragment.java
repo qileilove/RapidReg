@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.tracing;
+package org.unicef.rapidreg.childcase;
 
 import android.text.TextUtils;
 
@@ -9,7 +9,8 @@ import org.unicef.rapidreg.service.RecordService;
 import java.util.List;
 import java.util.Map;
 
-public class TracingSearchFragment extends RecordSearchFragment {
+public class CaseSearchFragment extends RecordSearchFragment {
+
     @Override
     protected List<RecordModel> getSearchResult(Map<String, String> filters) {
         String id = filters.get(ID);
@@ -21,7 +22,7 @@ public class TracingSearchFragment extends RecordSearchFragment {
         String caregiver = filters.get(CAREGIVER);
         String registrationDate = filters.get(REGISTRATION_DATE);
 
-        return RecordService.getInstance().getTracingsSearchResult(id, name, ageFrom, ageTo,
+        return RecordService.getInstance().getCasesSearchResult(id, name, ageFrom, ageTo,
                 caregiver, getDate(registrationDate));
     }
 }

@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.base;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,11 +18,7 @@ import android.widget.ViewSwitcher;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.RecordListAdapter;
-import org.unicef.rapidreg.base.RecordListPresenter;
-import org.unicef.rapidreg.base.RecordListView;
 import org.unicef.rapidreg.model.RecordModel;
-import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.widgets.ClearableEditText;
 
 import java.sql.Date;
@@ -37,19 +33,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class SearchFragment extends MvpFragment<RecordListView, RecordListPresenter>
+public abstract class RecordSearchFragment extends MvpFragment<RecordListView, RecordListPresenter>
         implements RecordListView {
-    public static final String TAG = SearchFragment.class.getSimpleName();
+    public static final String TAG = RecordSearchFragment.class.getSimpleName();
 
     private static final int HAVE_RESULT_LIST = 0;
     private static final int HAVE_NO_RESULT = 1;
 
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String AGE_FROM = "age_from";
-    private static final String AGE_TO = "age_to";
-    private static final String CAREGIVER = "caregiver";
-    private static final String REGISTRATION_DATE = "registration_date";
+    protected static final String ID = "id";
+    protected static final String NAME = "name";
+    protected static final String AGE_FROM = "age_from";
+    protected static final String AGE_TO = "age_to";
+    protected static final String CAREGIVER = "caregiver";
+    protected static final String REGISTRATION_DATE = "registration_date";
 
     @BindView(R.id.list_container)
     RecyclerView caseListContainer;
@@ -170,6 +166,17 @@ public class SearchFragment extends MvpFragment<RecordListView, RecordListPresen
         adapter.notifyDataSetChanged();
     }
 
+    protected Date getDate(String value) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            java.util.Date date = simpleDateFormat.parse(value);
+            return new Date(date.getTime());
+        } catch (ParseException e) {
+        }
+
+        return null;
+    }
+
     private String getFirstValidValue(Map<String, String> values) {
         for (String key : values.keySet()) {
             String value = values.get(key);
@@ -179,17 +186,6 @@ public class SearchFragment extends MvpFragment<RecordListView, RecordListPresen
         }
 
         return getResources().getString(R.string.click_to_search);
-    }
-
-    private Date getDate(String value) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        try {
-            java.util.Date date = simpleDateFormat.parse(value);
-            return new Date(date.getTime());
-        } catch (ParseException e) {
-        }
-
-        return null;
     }
 
     private Map<String, String> getFilterValues() {
@@ -204,17 +200,5 @@ public class SearchFragment extends MvpFragment<RecordListView, RecordListPresen
         return values;
     }
 
-    private List<RecordModel> getSearchResult(Map<String, String> filters) {
-        String id = filters.get(ID);
-        String name = filters.get(NAME);
-        String from = filters.get(AGE_FROM);
-        int ageFrom = TextUtils.isEmpty(from) ? RecordModel.MIN_AGE : Integer.valueOf(from);
-        String to = filters.get(AGE_TO);
-        int ageTo = TextUtils.isEmpty(to) ? RecordModel.MAX_AGE : Integer.valueOf(to);
-        String caregiver = filters.get(CAREGIVER);
-        String registrationDate = filters.get(REGISTRATION_DATE);
-
-        return RecordService.getInstance().getSearchResult(id, name, ageFrom, ageTo,
-                caregiver, getDate(registrationDate));
-    }
+    protected abstract List<RecordModel> getSearchResult(Map<String, String> filters);
 }
