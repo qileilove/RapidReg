@@ -3,16 +3,18 @@ package org.unicef.rapidreg.childcase;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.view.RequestActivity;
 import org.unicef.rapidreg.event.SaveCaseEvent;
 import org.unicef.rapidreg.forms.CaseFormRoot;
 import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 
 import java.util.ArrayList;
@@ -24,28 +26,25 @@ public class CaseActivity extends RequestActivity {
     public static final String TAG = CaseActivity.class.getSimpleName();
 
     @Override
-    protected void navSyncAction() {
-        if (currentFeature.isEditMode()) {
-            showQuitDialog(R.id.nav_sync);
-        } else {
-            CaseFieldValueCache.clearAudioFile();
-            intentSender.showSyncActivity(this);
-        }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        turnToFeature(CaseFeature.LIST, null);
     }
 
     @Override
     protected void navCaseAction() {
-        if (currentFeature.isEditMode()) {
+        if (currentCaseFeature.isEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
             CaseFieldValueCache.clearAudioFile();
-            turnToFeature(Feature.LIST, null);
+            turnToFeature(CaseFeature.LIST, null);
         }
     }
 
     @Override
     protected void navTracingAction() {
-        if (currentFeature.isDetailMode()) {
+        if (currentCaseFeature.isDetailMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -55,14 +54,19 @@ public class CaseActivity extends RequestActivity {
 
     @Override
     protected void processBackButton() {
-        if (currentFeature.isListMode()) {
+        if (currentCaseFeature.isListMode()) {
             logOut(this);
-        } else if (currentFeature.isEditMode()) {
+        } else if (currentCaseFeature.isEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
             CaseFieldValueCache.clearAudioFile();
-            turnToFeature(Feature.LIST, null);
+            turnToFeature(CaseFeature.LIST, null);
         }
+    }
+
+    @Override
+    protected void search() {
+        turnToFeature(CaseFeature.SEARCH, null);
     }
 
     @Override
@@ -72,40 +76,12 @@ public class CaseActivity extends RequestActivity {
         if (validateRequiredField()) {
             SaveCaseEvent event = new SaveCaseEvent();
             EventBus.getDefault().postSticky(event);
-            turnToFeature(Feature.LIST, null);
+            turnToFeature(CaseFeature.LIST, null);
         }
     }
 
-    private void clearFocusToMakeLastFieldSaved() {
-        RegisterWrapperFragment fragment =
-                (RegisterWrapperFragment) getSupportFragmentManager()
-                        .findFragmentByTag(RegisterWrapperFragment.class.getSimpleName());
-
-        if (fragment != null) {
-            fragment.clearFocus();
-        }
-    }
-
-    private boolean validateRequiredField() {
-        CaseFormRoot caseForm = CaseFormService.getInstance().getCurrentForm();
-        List<String> requiredFieldNames = new ArrayList<>();
-
-        for (Section section : caseForm.getSections()) {
-            Collections.addAll(requiredFieldNames, CaseService.getInstance()
-                    .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
-        }
-
-        for (String field : requiredFieldNames) {
-            if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
-                Toast.makeText(CaseActivity.this, R.string.required_field_is_not_filled,
-                        Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void showQuitDialog(final int clickedButton) {
+    @Override
+    protected void showQuitDialog(final int clickedButton) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.quit)
                 .setMessage(R.string.quit_without_saving)
@@ -115,7 +91,7 @@ public class CaseActivity extends RequestActivity {
                         CaseFieldValueCache.clearAudioFile();
                         switch (clickedButton) {
                             case R.id.nav_cases:
-                                turnToFeature(Feature.LIST, null);
+                                turnToFeature(CaseFeature.LIST, null);
                                 break;
                             case R.id.nav_sync:
                                 intentSender.showSyncActivity(CaseActivity.this);
@@ -127,5 +103,34 @@ public class CaseActivity extends RequestActivity {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void clearFocusToMakeLastFieldSaved() {
+        CaseRegisterWrapperFragment fragment =
+                (CaseRegisterWrapperFragment) getSupportFragmentManager()
+                        .findFragmentByTag(CaseRegisterWrapperFragment.class.getSimpleName());
+
+        if (fragment != null) {
+            fragment.clearFocus();
+        }
+    }
+
+    private boolean validateRequiredField() {
+        CaseFormRoot caseForm = CaseFormService.getInstance().getCurrentForm();
+        List<String> requiredFieldNames = new ArrayList<>();
+
+        for (Section section : caseForm.getSections()) {
+            Collections.addAll(requiredFieldNames, RecordService.getInstance()
+                    .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
+        }
+
+        for (String field : requiredFieldNames) {
+            if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
+                Toast.makeText(CaseActivity.this, R.string.required_field_is_not_filled,
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 }

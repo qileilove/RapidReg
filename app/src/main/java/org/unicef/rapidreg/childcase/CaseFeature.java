@@ -3,19 +3,20 @@ package org.unicef.rapidreg.childcase;
 import android.support.v4.app.Fragment;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.view.Feature;
 import org.unicef.rapidreg.exception.FragmentSwitchException;
 
-public enum Feature {
-    LIST(R.string.cases, ListFragment.class),
-    ADD(R.string.new_case, RegisterWrapperFragment.class),
-    EDIT(R.string.edit, RegisterWrapperFragment.class),
-    DETAILS(R.string.case_details, RegisterWrapperFragment.class),
-    SEARCH(R.string.search, SearchFragment.class);
+public enum CaseFeature implements Feature {
+    LIST(R.string.cases, CaseListFragment.class),
+    ADD(R.string.new_case, CaseRegisterWrapperFragment.class),
+    EDIT(R.string.edit, CaseRegisterWrapperFragment.class),
+    DETAILS(R.string.case_details, CaseRegisterWrapperFragment.class),
+    SEARCH(R.string.search, CaseSearchFragment.class);
 
     private int titleId;
     private Class clz;
 
-    Feature(int titleId, Class clz) {
+    CaseFeature(int titleId, Class clz) {
         this.titleId = titleId;
         this.clz = clz;
     }

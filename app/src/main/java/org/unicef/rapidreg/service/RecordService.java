@@ -13,13 +13,13 @@ import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 
 import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
-import org.unicef.rapidreg.db.CaseDao;
 import org.unicef.rapidreg.db.CasePhotoDao;
-import org.unicef.rapidreg.db.impl.CaseDaoImpl;
+import org.unicef.rapidreg.db.RecordDao;
 import org.unicef.rapidreg.db.impl.CasePhotoDaoImpl;
+import org.unicef.rapidreg.db.impl.RecordDaoImpl;
 import org.unicef.rapidreg.forms.Field;
-import org.unicef.rapidreg.model.Case;
 import org.unicef.rapidreg.model.CasePhoto;
+import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 import org.unicef.rapidreg.utils.ImageCompressUtil;
@@ -39,9 +39,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public class CaseService {
-    public static final String TAG = CaseService.class.getSimpleName();
+public class RecordService {
+    public static final String TAG = RecordService.class.getSimpleName();
     public static final String CASE_ID = "Case ID";
+    public static final String TRACING_ID = "Tracing ID";
     public static final String AGE = "Age";
     public static final String FULL_NAME = "Full Name";
     public static final String FIRST_NAME = "First Name";
@@ -56,44 +57,44 @@ public class CaseService {
     public static final String PREVIOUS_OWNER = "Previous Owner";
     public static final String MODULE = "Module";
 
-    private static final CaseService CASE_SERVICE = new CaseService();
+    private static final RecordService RECORD_SERVICE = new RecordService();
 
-    private CaseDao caseDao = new CaseDaoImpl();
+    private RecordDao recordDao = new RecordDaoImpl();
     private CasePhotoDao casePhotoDao = new CasePhotoDaoImpl();
 
-    public static CaseService getInstance() {
-        return CASE_SERVICE;
+    public static RecordService getInstance() {
+        return RECORD_SERVICE;
     }
 
-    private CaseService() {
+    private RecordService() {
     }
 
-    public CaseService(CaseDao caseDao) {
-        this.caseDao = caseDao;
+    public RecordService(RecordDao recordDao) {
+        this.recordDao = recordDao;
     }
 
-    public List<Case> getCaseList() {
-        return caseDao.getAllCasesOrderByDate(false);
+    public List<RecordModel> getCaseList() {
+        return recordDao.getAllCasesOrderByDate(false);
     }
 
-    public List<Case> getCaseListOrderByDateASC() {
-        return caseDao.getAllCasesOrderByDate(true);
+    public List<RecordModel> getCaseListOrderByDateASC() {
+        return recordDao.getAllCasesOrderByDate(true);
     }
 
-    public List<Case> getCaseListOrderByDateDES() {
-        return caseDao.getAllCasesOrderByDate(false);
+    public List<RecordModel> getCaseListOrderByDateDES() {
+        return recordDao.getAllCasesOrderByDate(false);
     }
 
-    public List<Case> getCaseListOrderByAgeASC() {
-        return caseDao.getAllCasesOrderByAge(true);
+    public List<RecordModel> getCaseListOrderByAgeASC() {
+        return recordDao.getAllCasesOrderByAge(true);
     }
 
-    public List<Case> getCaseListOrderByAgeDES() {
-        return caseDao.getAllCasesOrderByAge(false);
+    public List<RecordModel> getCaseListOrderByAgeDES() {
+        return recordDao.getAllCasesOrderByAge(false);
     }
 
     public Map<String, String> getCaseMapByUniqueId(String uniqueId) {
-        Case child = caseDao.getCaseByUniqueId(uniqueId);
+        RecordModel child = recordDao.getCaseByUniqueId(uniqueId);
         if (child == null) {
             return new HashMap<>();
         }
@@ -107,24 +108,24 @@ public class CaseService {
         return values;
     }
 
-    public List<Case> getSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
-                                      String caregiver, Date date) {
+    public List<RecordModel> getSearchResult(String uniqueId, String name, int ageFrom, int ageTo,
+                                             String caregiver, Date date) {
         ConditionGroup conditionGroup = ConditionGroup.clause();
-        conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_UNIQUE_ID).build())
+        conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_UNIQUE_ID).build())
                 .like(getWrappedCondition(uniqueId)));
-        conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_NAME).build())
+        conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_NAME).build())
                 .like(getWrappedCondition(name)));
-        conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_AGE).build())
+        conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_AGE).build())
                 .between(ageFrom).and(ageTo));
-        conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_CAREGIVER).build())
+        conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_CAREGIVER).build())
                 .like(getWrappedCondition(caregiver)));
 
         if (date != null) {
-            conditionGroup.and(Condition.column(NameAlias.builder(Case.COLUMN_REGISTRATION_DATE)
+            conditionGroup.and(Condition.column(NameAlias.builder(RecordModel.COLUMN_REGISTRATION_DATE)
                     .build()).eq(date));
         }
 
-        return caseDao.getCaseListByConditionGroup(conditionGroup);
+        return recordDao.getAllCasesByConditionGroup(conditionGroup);
     }
 
     public List<String> fetchRequiredFiledNames(List<Field> fields) {
@@ -168,12 +169,12 @@ public class CaseService {
         Blob audioFileDefault = null;
         audioFileDefault = getAudioBlob(audioFileDefault);
 
-        Case child = new Case();
+        RecordModel child = new RecordModel();
         child.setUniqueId(createUniqueId());
         child.setCreateDate(date);
         child.setLastUpdatedDate(date);
         child.setContent(caseBlob);
-        child.setName(getChildName(values));
+        child.setName(getName(values));
         int age = values.get(AGE) != null ? Integer.parseInt(values.get(AGE)) : 0;
         child.setAge(age);
         child.setCaregiver(getCaregiverName(values));
@@ -191,7 +192,7 @@ public class CaseService {
         CaseFieldValueCache.clearAudioFile();
     }
 
-    public void saveCasePhoto(Case child, List<String> photoPaths) throws IOException {
+    public void saveCasePhoto(RecordModel child, List<String> photoPaths) throws IOException {
         for (int i = 0; i < photoPaths.size(); i++) {
             generateSaveCasePhoto(child, photoPaths, i).save();
         }
@@ -206,10 +207,10 @@ public class CaseService {
         Blob audioFileDefault = null;
         audioFileDefault = getAudioBlob(audioFileDefault);
 
-        Case child = caseDao.getCaseByUniqueId(values.get(CASE_ID));
+        RecordModel child = recordDao.getCaseByUniqueId(values.get(CASE_ID));
         child.setLastUpdatedDate(new Date(Calendar.getInstance().getTimeInMillis()));
         child.setContent(caseBlob);
-        child.setName(getChildName(values));
+        child.setName(getName(values));
         int age = values.get(AGE) != null ? Integer.parseInt(values.get(AGE)) : 0;
         child.setAge(age);
         child.setCaregiver(getCaregiverName(values));
@@ -225,7 +226,7 @@ public class CaseService {
         CaseFieldValueCache.clearAudioFile();
     }
 
-    public void updateCasePhoto(Case child, List<String> photoPaths) throws IOException {
+    public void updateCasePhoto(RecordModel child, List<String> photoPaths) throws IOException {
         int previousCount = casePhotoDao.getAllCasesPhotoFlowQueryList(child.getId()).size();
 
         if (previousCount < photoPaths.size()) {
@@ -255,7 +256,7 @@ public class CaseService {
         }
     }
 
-    private CasePhoto generateSaveCasePhoto(Case child, List<String> photoPaths, int index) throws IOException {
+    private CasePhoto generateSaveCasePhoto(RecordModel child, List<String> photoPaths, int index) throws IOException {
         CasePhoto casePhoto = casePhotoDao.getSpecialOrderCasePhotoByCaseId(child.getId(), index + 1);
         if (casePhoto == null) {
             casePhoto = new CasePhoto();
@@ -267,13 +268,13 @@ public class CaseService {
                         CasePhotoConfig.THUMBNAIL_SIZE))));
 
         casePhoto.setPhoto(new Blob(ImageCompressUtil.convertImageToBytes(bitmap)));
-        casePhoto.setCase(child);
+        casePhoto.setRecord(child);
         casePhoto.setOrder(index + 1);
         return casePhoto;
     }
 
     @NonNull
-    private CasePhoto generateUpdateCasePhoto(Case child, List<String> photoPaths, int index)
+    private CasePhoto generateUpdateCasePhoto(RecordModel child, List<String> photoPaths, int index)
             throws IOException {
         CasePhoto casePhoto;
         String filePath = photoPaths.get(index);
@@ -288,7 +289,7 @@ public class CaseService {
             casePhoto.setThumbnail(new Blob(ImageCompressUtil.convertImageToBytes(
                     ImageCompressUtil.getThumbnail(bitmap, CasePhotoConfig.THUMBNAIL_SIZE,
                             CasePhotoConfig.THUMBNAIL_SIZE))));
-            casePhoto.setCase(child);
+            casePhoto.setRecord(child);
             casePhoto.setPhoto(photo);
         }
         casePhoto.setId(casePhotoDao.getSpecialOrderCasePhotoByCaseId(child.getId(), index + 1).getId());
@@ -339,7 +340,7 @@ public class CaseService {
         return getCurrentDate();
     }
 
-    private String getChildName(Map<String, String> values) {
+    private String getName(Map<String, String> values) {
         return values.get(FULL_NAME) + " "
                 + values.get(FIRST_NAME) + " "
                 + values.get(MIDDLE_NAME) + " "

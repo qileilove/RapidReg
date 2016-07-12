@@ -33,7 +33,7 @@ import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.CasePhotoService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -44,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterWrapperFragment extends Fragment {
+public class CaseRegisterWrapperFragment extends Fragment {
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
@@ -119,7 +119,7 @@ public class RegisterWrapperFragment extends Fragment {
 
     @OnClick(R.id.edit_case)
     public void onCaseEditClicked() {
-        ((CaseActivity) getActivity()).turnToDetailOrEditPage(Feature.EDIT, caseId);
+        ((CaseActivity) getActivity()).turnToDetailOrEditPage(CaseFeature.EDIT, caseId);
     }
 
     private CasePhotoAdapter initCasePhotoAdapter() {
@@ -152,13 +152,13 @@ public class RegisterWrapperFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void saveCase(SaveCaseEvent event) {
         List<String> photoPaths = casePhotoAdapter.getAllItems();
-        CaseService.getInstance().saveOrUpdateCase(CaseFieldValueCache.getValues(),
+        RecordService.getInstance().saveOrUpdateCase(CaseFieldValueCache.getValues(),
                 SubformCache.getValues(),
                 photoPaths);
     }
 
     private void initFloatingActionButton() {
-        if (((CaseActivity) getActivity()).getCurrentFeature() == Feature.DETAILS) {
+        if (((CaseActivity) getActivity()).getCurrentCaseFeature() == CaseFeature.DETAILS) {
             editCaseButton.setVisibility(View.VISIBLE);
         } else {
             editCaseButton.setVisibility(View.GONE);
@@ -259,7 +259,7 @@ public class RegisterWrapperFragment extends Fragment {
     }
 
     private void addProfileFieldForDetailsPage() {
-        if (((CaseActivity) getActivity()).getCurrentFeature() == Feature.DETAILS) {
+        if (((CaseActivity) getActivity()).getCurrentCaseFeature() == CaseFeature.DETAILS) {
             Field field = new Field();
             field.setType(Field.TYPE_MINI_FORM_PROFILE);
             try {

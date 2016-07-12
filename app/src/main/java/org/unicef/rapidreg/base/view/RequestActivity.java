@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.base.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.BaseActivity;
+import org.unicef.rapidreg.childcase.CaseListFragment;
 import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
 import org.unicef.rapidreg.event.NeedLoadFormsEvent;
 import org.unicef.rapidreg.event.UpdateImageEvent;
@@ -35,6 +35,7 @@ import org.unicef.rapidreg.model.TracingForm;
 import org.unicef.rapidreg.network.AuthService;
 import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.TracingFormService;
+import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.utils.ImageCompressUtil;
 import org.unicef.rapidreg.widgets.viewholder.PhotoUploadViewHolder;
 
@@ -53,7 +54,7 @@ public abstract class RequestActivity extends BaseActivity {
     public static final String TAG = RequestActivity.class.getSimpleName();
 
     protected DetailState textAreaState = DetailState.VISIBILITY;
-    protected Feature currentFeature;
+    protected Feature currentCaseFeature;
 
     protected MenuItem showHideMenu;
     protected MenuItem saveMenu;
@@ -68,7 +69,6 @@ public abstract class RequestActivity extends BaseActivity {
         subscriptions = new CompositeSubscription();
 
         initToolbar();
-        turnToFeature(Feature.LIST, null);
         EventBus.getDefault().register(this);
     }
 
@@ -96,6 +96,16 @@ public abstract class RequestActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void navSyncAction() {
+        if (currentCaseFeature.isEditMode()) {
+            showQuitDialog(R.id.nav_sync);
+        } else {
+            CaseFieldValueCache.clearAudioFile();
+            intentSender.showSyncActivity(this);
+        }
+    }
+
     private void onSelectFromGalleryResult(Intent data) {
         Uri uri = data.getData();
         if (!TextUtils.isEmpty(uri.getAuthority())) {
@@ -109,12 +119,12 @@ public abstract class RequestActivity extends BaseActivity {
         }
     }
 
-    public Feature getCurrentFeature() {
-        return currentFeature;
+    public Feature getCurrentCaseFeature() {
+        return currentCaseFeature;
     }
 
     public void turnToFeature(Feature feature, Bundle args) {
-        currentFeature = feature;
+        currentCaseFeature = feature;
         changeToolbarTitle(feature.getTitleId());
         changeToolbarIcon(feature);
         try {
@@ -128,15 +138,15 @@ public abstract class RequestActivity extends BaseActivity {
         }
     }
 
-    public void turnToDetailOrEditPage(Feature feature, long caseId) {
+    public void turnToDetailOrEditPage(Feature caseFeature, long caseId) {
         try {
 
             Bundle args = new Bundle();
             args.putLong("case_id", caseId);
 
-            currentFeature = feature;
+            currentCaseFeature = caseFeature;
 
-            turnToFeature(feature, args);
+            turnToFeature(caseFeature, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,13 +192,13 @@ public abstract class RequestActivity extends BaseActivity {
         toolbar.setTitle(resId);
     }
 
-    protected void changeToolbarIcon(Feature feature) {
+    protected void changeToolbarIcon(Feature caseFeature) {
         hideAllToolbarIcons();
 
-        if (feature.isListMode()) {
+        if (caseFeature.isListMode()) {
             showHideMenu.setVisible(true);
             searchMenu.setVisible(true);
-        } else if (feature.isEditMode()) {
+        } else if (caseFeature.isEditMode()) {
             saveMenu.setVisible(true);
         }
     }
@@ -211,9 +221,9 @@ public abstract class RequestActivity extends BaseActivity {
         textAreaState = textAreaState.getNextState();
 
         showHideMenu.setIcon(textAreaState.getResId());
-        ListFragment listFragment = (ListFragment) getSupportFragmentManager()
-                .findFragmentByTag(ListFragment.class.getSimpleName());
-        listFragment.toggleMode(textAreaState.isDetailShow());
+        CaseListFragment caseListFragment = (CaseListFragment) getSupportFragmentManager()
+                .findFragmentByTag(CaseListFragment.class.getSimpleName());
+        caseListFragment.toggleMode(textAreaState.isDetailShow());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1)
@@ -238,7 +248,6 @@ public abstract class RequestActivity extends BaseActivity {
                     @Override
                     public void call(CaseFormRoot caseFormRoot) {
 
-                        Log.d("fengbo", "get case from");
                         CaseFormRoot form = caseFormRoot;
                         CaseForm caseForm = new CaseForm(new Blob(gson.toJson(form).getBytes()));
                         CaseFormService.getInstance().saveOrUpdateForm(caseForm);
@@ -271,7 +280,6 @@ public abstract class RequestActivity extends BaseActivity {
                     public void call(TracingFormRoot tracingFormRoot) {
                         TracingFormRoot form = tracingFormRoot;
 
-                        Log.d("fengbo", "get tracing from");
                         TracingForm tracingForm = new TracingForm(new Blob(gson.toJson(form).getBytes()));
                         TracingFormService.getInstance().saveOrUpdateForm(tracingForm);
 
@@ -286,7 +294,11 @@ public abstract class RequestActivity extends BaseActivity {
                 }));
     }
 
+    protected abstract void search();
+
     protected abstract void save();
+
+    protected abstract void showQuitDialog(int resId);
 
     private class MenuItemListener implements Toolbar.OnMenuItemClickListener {
         @Override
@@ -296,7 +308,7 @@ public abstract class RequestActivity extends BaseActivity {
                     showHideDetail();
                     return true;
                 case R.id.search:
-                    turnToFeature(Feature.SEARCH, null);
+                    search();
                     return true;
                 case R.id.save_case:
                     save();

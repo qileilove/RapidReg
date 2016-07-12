@@ -21,9 +21,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.model.Case;
+import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
+public class CaseListFragment extends MvpFragment<CaseListView, CaseListPresenter>
         implements CaseListView {
 
     private static final SpinnerState[] SPINNER_STATES = {
@@ -101,7 +101,7 @@ public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
         caseListContainer.setLayoutManager(layoutManager);
         caseListContainer.setAdapter(adapter);
 
-        List<Case> caseList = CaseService.getInstance().getCaseList();
+        List<RecordModel> caseList = RecordService.getInstance().getCaseList();
         int index = caseList.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
         viewSwitcher.setDisplayedChild(index);
 
@@ -124,19 +124,19 @@ public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
             }
 
             private void handleItemSelection(int position) {
-                CaseService caseService = CaseService.getInstance();
+                RecordService recordService = RecordService.getInstance();
                 switch (SPINNER_STATES[position]) {
                     case AGE_ASC:
-                        adapter.setCaseList(caseService.getCaseListOrderByAgeASC());
+                        adapter.setCaseList(recordService.getCaseListOrderByAgeASC());
                         break;
                     case AGE_DES:
-                        adapter.setCaseList(caseService.getCaseListOrderByAgeDES());
+                        adapter.setCaseList(recordService.getCaseListOrderByAgeDES());
                         break;
                     case DATE_ASC:
-                        adapter.setCaseList(caseService.getCaseListOrderByDateASC());
+                        adapter.setCaseList(recordService.getCaseListOrderByDateASC());
                         break;
                     case DATE_DES:
-                        adapter.setCaseList(caseService.getCaseListOrderByDateDES());
+                        adapter.setCaseList(recordService.getCaseListOrderByDateDES());
                         break;
                     default:
                         break;
@@ -162,7 +162,7 @@ public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
 
     @OnClick(R.id.add_case)
     public void onCaseAddClicked() {
-        CaseService.getInstance().clearCaseCache();
+        RecordService.getInstance().clearCaseCache();
         SubformCache.clear();
         CaseFieldValueCache.clearAudioFile();
         if (!CaseFormService.getInstance().isFormReady()) {
@@ -173,7 +173,7 @@ public class ListFragment extends MvpFragment<CaseListView, CaseListPresenter>
         floatingMenu.collapseImmediately();
 
         CaseActivity activity = (CaseActivity) getActivity();
-        activity.turnToFeature(Feature.ADD, null);
+        activity.turnToFeature(CaseFeature.ADD, null);
     }
 
     public void toggleMode(boolean isShow) {

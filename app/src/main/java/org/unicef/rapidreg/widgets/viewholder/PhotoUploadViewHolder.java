@@ -65,7 +65,7 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
     }
 
     private void setAddPhotoButtonIcon() {
-        if (((CaseActivity) context).getCurrentFeature().isDetailMode()) {
+        if (((CaseActivity) context).getCurrentCaseFeature().isDetailMode()) {
             addImageButton.setVisibility(View.GONE);
             if (adapter.isEmpty()) {
                 noPhotoPromoteView.setVisibility(View.VISIBLE);

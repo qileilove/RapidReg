@@ -2,12 +2,19 @@ package org.unicef.rapidreg.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.data.Blob;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.unicef.rapidreg.db.PrimeroDB;
+
 import java.sql.Date;
 
+@Table(database = PrimeroDB.class)
 public class RecordModel extends BaseModel {
+    public static final int CASE = 0;
+    public static final int TRACING = 1;
+
     public static final int MIN_AGE = 0;
     public static final int MAX_AGE = 100;
     public static final String COLUMN_UNIQUE_ID = "unique_id";
@@ -52,6 +59,8 @@ public class RecordModel extends BaseModel {
     private Date lastUpdatedDate;
     @Column(name = "last_synced_date")
     private Date lastSyncedDate;
+    @Column(name = "type")
+    private int type;
 
     public long getId() {
         return id;
@@ -197,9 +206,17 @@ public class RecordModel extends BaseModel {
         this.lastSyncedDate = lastSyncedDate;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Case:");
+        StringBuilder sb = new StringBuilder("RecordModel:");
         sb.append("id").append(id).append("\n");
         sb.append("name").append(name).append("\n");
         sb.append("age").append(age).append("\n");
@@ -215,6 +232,7 @@ public class RecordModel extends BaseModel {
         sb.append("createDate").append(createDate).append("\n");
         sb.append("lastUpdatedDate").append(lastUpdatedDate).append("\n");
         sb.append("lastSyncedDate").append(lastSyncedDate).append("\n");
+        sb.append("type").append(type).append("\n");
 
         return sb.toString();
     }

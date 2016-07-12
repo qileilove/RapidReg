@@ -94,7 +94,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
                 updateIndexForFields();
             }
         });
-        deleteBtn.setVisibility(activity.getCurrentFeature().isEditMode() ?
+        deleteBtn.setVisibility(activity.getCurrentCaseFeature().isEditMode() ?
                 View.VISIBLE : View.GONE);
     }
 

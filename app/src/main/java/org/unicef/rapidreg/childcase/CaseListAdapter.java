@@ -17,10 +17,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.model.Case;
 import org.unicef.rapidreg.model.CasePhoto;
+import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.CasePhotoService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 import org.unicef.rapidreg.utils.StreamUtil;
@@ -41,7 +41,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
     private static final int TEXT_AREA_SHOWED_STATE = 0;
     private static final int TEXT_AREA_HIDDEN_STATE = 1;
 
-    private List<Case> caseList = new ArrayList<>();
+    private List<RecordModel> caseList = new ArrayList<>();
     private CaseActivity activity;
     private DateFormat dateFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
     private boolean isDetailShow = true;
@@ -50,7 +50,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
         this.activity = (CaseActivity) activity;
     }
 
-    public void setCaseList(List<Case> caseList) {
+    public void setCaseList(List<RecordModel> caseList) {
         this.caseList = caseList;
     }
 
@@ -64,7 +64,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
     @Override
     public void onBindViewHolder(CaseListHolder holder, int position) {
-        final Case caseItem = caseList.get(position);
+        final RecordModel caseItem = caseList.get(position);
 
         final String caseJson = new String(caseItem.getContent().getBlob());
         final String subformJson = new String(caseItem.getSubform().getBlob());
@@ -72,7 +72,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
         }.getType();
 
         final Map<String, String> caseInfo = new Gson().fromJson(caseJson, caseType);
-        caseInfo.put(CaseService.CASE_ID, caseItem.getUniqueId());
+        caseInfo.put(RecordService.CASE_ID, caseItem.getUniqueId());
 
         final Type subformType = new TypeToken<Map<String, List<Map<String, String>>>>() {
         }.getType();
@@ -109,7 +109,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CaseService.getInstance().clearCaseCache();
+                RecordService.getInstance().clearCaseCache();
 
                 setProfileForMiniForm(caseItem, caseInfo, shortUUID);
                 CaseFieldValueCache.setValues(caseInfo);
@@ -117,7 +117,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
 
                 CasePhotoService.getInstance().setCaseId(caseItem.getId());
 
-                activity.turnToDetailOrEditPage(Feature.DETAILS, caseItem.getId());
+                activity.turnToDetailOrEditPage(CaseFeature.DETAILS, caseItem.getId());
 
                 try {
                     CaseFieldValueCache.clearAudioFile();
@@ -132,7 +132,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseLi
         toggleTextArea(holder);
     }
 
-    private void setProfileForMiniForm(Case caseItem, Map<String, String> caseInfo, String shortUUID) {
+    private void setProfileForMiniForm(RecordModel caseItem, Map<String, String> caseInfo, String shortUUID) {
         CaseFieldValueCache.addProfileItem(CaseFieldValueCache.CaseProfile.ID_NORMAL_STATE, shortUUID);
         CaseFieldValueCache.addProfileItem(CaseFieldValueCache.CaseProfile.SEX, caseInfo.get("Sex"));
         CaseFieldValueCache.addProfileItem(CaseFieldValueCache.CaseProfile.REGISTRATION_DATE,

@@ -3,19 +3,20 @@ package org.unicef.rapidreg.tracing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.Feature;
-import org.unicef.rapidreg.childcase.RegisterWrapperFragment;
-import org.unicef.rapidreg.childcase.RequestActivity;
-import org.unicef.rapidreg.event.SaveCaseEvent;
-import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.base.view.RequestActivity;
+import org.unicef.rapidreg.childcase.CaseFeature;
+import org.unicef.rapidreg.childcase.CaseRegisterWrapperFragment;
+import org.unicef.rapidreg.event.SaveTracingEvent;
 import org.unicef.rapidreg.forms.Section;
-import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.forms.TracingFormRoot;
+import org.unicef.rapidreg.service.RecordService;
+import org.unicef.rapidreg.service.TracingFormService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 
 import java.util.ArrayList;
@@ -26,18 +27,15 @@ public class TracingActivity extends RequestActivity {
     public static final String TAG = TracingActivity.class.getSimpleName();
 
     @Override
-    protected void navSyncAction() {
-        if (currentFeature.isEditMode()) {
-            showQuitDialog(R.id.nav_sync);
-        } else {
-            CaseFieldValueCache.clearAudioFile();
-            intentSender.showSyncActivity(this);
-        }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        turnToFeature(TracingFeature.LIST, null);
     }
 
     @Override
     protected void navCaseAction() {
-        if (currentFeature.isDetailMode()) {
+        if (currentCaseFeature.isDetailMode()) {
             showQuitDialog(R.id.nav_tracing);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -47,7 +45,7 @@ public class TracingActivity extends RequestActivity {
 
     @Override
     protected void navTracingAction() {
-        if (currentFeature.isEditMode()) {
+        if (currentCaseFeature.isEditMode()) {
             showQuitDialog(R.id.nav_sync);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -57,14 +55,19 @@ public class TracingActivity extends RequestActivity {
 
     @Override
     protected void processBackButton() {
-        if (currentFeature.isListMode()) {
+        if (currentCaseFeature.isListMode()) {
             logOut(this);
-        } else if (currentFeature.isEditMode()) {
+        } else if (currentCaseFeature.isEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
             CaseFieldValueCache.clearAudioFile();
-            turnToFeature(Feature.LIST, null);
+            turnToFeature(CaseFeature.LIST, null);
         }
+    }
+
+    @Override
+    protected void search() {
+        turnToFeature(TracingFeature.SEARCH, null);
     }
 
     @Override
@@ -72,42 +75,14 @@ public class TracingActivity extends RequestActivity {
         clearFocusToMakeLastFieldSaved();
 
         if (validateRequiredField()) {
-            SaveCaseEvent event = new SaveCaseEvent();
+            SaveTracingEvent event = new SaveTracingEvent();
             EventBus.getDefault().postSticky(event);
-            turnToFeature(Feature.LIST, null);
+            turnToFeature(TracingFeature.LIST, null);
         }
     }
 
-    private void clearFocusToMakeLastFieldSaved() {
-        RegisterWrapperFragment fragment =
-                (RegisterWrapperFragment) getSupportFragmentManager()
-                        .findFragmentByTag(RegisterWrapperFragment.class.getSimpleName());
-
-        if (fragment != null) {
-            fragment.clearFocus();
-        }
-    }
-
-    private boolean validateRequiredField() {
-        CaseFormRoot caseForm = CaseFormService.getInstance().getCurrentForm();
-        List<String> requiredFieldNames = new ArrayList<>();
-
-        for (Section section : caseForm.getSections()) {
-            Collections.addAll(requiredFieldNames, CaseService.getInstance()
-                    .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
-        }
-
-        for (String field : requiredFieldNames) {
-            if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
-                Toast.makeText(TracingActivity.this, R.string.required_field_is_not_filled,
-                        Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void showQuitDialog(final int clickedButton) {
+    @Override
+    protected void showQuitDialog(final int clickedButton) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.quit)
                 .setMessage(R.string.quit_without_saving)
@@ -117,7 +92,7 @@ public class TracingActivity extends RequestActivity {
                         CaseFieldValueCache.clearAudioFile();
                         switch (clickedButton) {
                             case R.id.nav_cases:
-                                turnToFeature(Feature.LIST, null);
+                                turnToFeature(TracingFeature.LIST, null);
                                 break;
                             case R.id.nav_sync:
                                 intentSender.showSyncActivity(TracingActivity.this);
@@ -129,6 +104,35 @@ public class TracingActivity extends RequestActivity {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void clearFocusToMakeLastFieldSaved() {
+        CaseRegisterWrapperFragment fragment =
+                (CaseRegisterWrapperFragment) getSupportFragmentManager()
+                        .findFragmentByTag(CaseRegisterWrapperFragment.class.getSimpleName());
+
+        if (fragment != null) {
+            fragment.clearFocus();
+        }
+    }
+
+    private boolean validateRequiredField() {
+        TracingFormRoot tracingForm = TracingFormService.getInstance().getCurrentForm();
+        List<String> requiredFieldNames = new ArrayList<>();
+
+        for (Section section : tracingForm.getSections()) {
+            Collections.addAll(requiredFieldNames, RecordService.getInstance()
+                    .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
+        }
+
+        for (String field : requiredFieldNames) {
+            if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
+                Toast.makeText(TracingActivity.this, R.string.required_field_is_not_filled,
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 }
 

@@ -10,14 +10,11 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.unicef.rapidreg.PrimeroConfiguration;
 import org.unicef.rapidreg.network.SyncService;
-import org.unicef.rapidreg.service.CaseService;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -42,11 +39,11 @@ public class SyncPresenter extends MvpBasePresenter<SyncView> {
     }
 
 
-    private  void convert (JsonElement jsonElement) {
+    private void convert(JsonElement jsonElement) {
 
         if (jsonElement.isJsonObject()) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            for (Map.Entry<String, JsonElement> entry: jsonObject.entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                 if (entry.getValue().isJsonArray()) {
                     break;
                 }
@@ -57,7 +54,7 @@ public class SyncPresenter extends MvpBasePresenter<SyncView> {
         }.getType();
 
         final Map<String, String> caseInfo = new Gson().fromJson(jsonElement, caseType);
-        //caseInfo.put(CaseService.CASE_ID, caseItem.getUniqueId());
+        //caseInfo.put(RecordService.CASE_ID, caseItem.getUniqueId());
 
         final Type subformType = new TypeToken<Map<String, List<Map<String, String>>>>() {
         }.getType();
@@ -65,6 +62,7 @@ public class SyncPresenter extends MvpBasePresenter<SyncView> {
 //                            final Map<String, List<Map<String, String>>> subformInfo
 //                                    = new Gson().fromJson(subformJson, subformType);
     }
+
     public void doSync() {
         if (isViewAttached()) {
             getView().showSyncProgressDialog();
@@ -79,11 +77,10 @@ public class SyncPresenter extends MvpBasePresenter<SyncView> {
 //                    }
                     List<JsonElement> arrayList = arrayListResponse.body();
 
-                    for (JsonElement element: arrayList) {
+                    for (JsonElement element : arrayList) {
 
 
-
-                            convert(element);
+                        convert(element);
 
                     }
                     return;

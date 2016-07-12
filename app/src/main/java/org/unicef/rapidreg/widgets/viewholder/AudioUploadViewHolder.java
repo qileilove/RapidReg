@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.media.AudioRecorderActivity;
 import org.unicef.rapidreg.childcase.CaseActivity;
+import org.unicef.rapidreg.childcase.media.AudioRecorderActivity;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.utils.StreamUtil;
 
@@ -43,14 +43,14 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     public void setValue(Object field) {
         final boolean audiofileExists = StreamUtil.isFileExists(mFileName);
 
-        if (!activity.getCurrentFeature().isEditMode()) {
+        if (!activity.getCurrentCaseFeature().isEditMode()) {
             initPlayAudioUI();
         }
 
         if (audiofileExists) {
             initPlayAudioUI();
             showDeleteIconWhenIsEditMode();
-        } else if (activity.getCurrentFeature().isEditMode()){
+        } else if (activity.getCurrentCaseFeature().isEditMode()) {
             initAudioRecordUI();
         }
     }
@@ -96,7 +96,7 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     }
 
     private void showDeleteIconWhenIsEditMode() {
-        if (activity.getCurrentFeature().isEditMode()) {
+        if (activity.getCurrentCaseFeature().isEditMode()) {
             audioDeleteButton.setVisibility(View.VISIBLE);
         }
     }

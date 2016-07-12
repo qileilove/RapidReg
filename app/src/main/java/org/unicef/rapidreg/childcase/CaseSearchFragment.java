@@ -18,8 +18,8 @@ import android.widget.ViewSwitcher;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.model.Case;
-import org.unicef.rapidreg.service.CaseService;
+import org.unicef.rapidreg.model.RecordModel;
+import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.widgets.ClearableEditText;
 
 import java.sql.Date;
@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class SearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
+public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
         implements CaseListView {
-    public static final String TAG = SearchFragment.class.getSimpleName();
+    public static final String TAG = CaseSearchFragment.class.getSimpleName();
 
     private static final int HAVE_RESULT_LIST = 0;
     private static final int HAVE_NO_RESULT = 1;
@@ -158,7 +158,7 @@ public class SearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
         Map<String, String> values = getFilterValues();
         searchBarTitle.setText(getFirstValidValue(values));
 
-        List<Case> searchResult = getSearchResult(values);
+        List<RecordModel> searchResult = getSearchResult(values);
 
         int resultIndex = searchResult.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
         searchResultSwitcher.setDisplayedChild(resultIndex);
@@ -201,17 +201,17 @@ public class SearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
         return values;
     }
 
-    private List<Case> getSearchResult(Map<String, String> filters) {
+    private List<RecordModel> getSearchResult(Map<String, String> filters) {
         String id = filters.get(ID);
         String name = filters.get(NAME);
         String from = filters.get(AGE_FROM);
-        int ageFrom = TextUtils.isEmpty(from) ? Case.MIN_AGE : Integer.valueOf(from);
+        int ageFrom = TextUtils.isEmpty(from) ? RecordModel.MIN_AGE : Integer.valueOf(from);
         String to = filters.get(AGE_TO);
-        int ageTo = TextUtils.isEmpty(to) ? Case.MAX_AGE : Integer.valueOf(to);
+        int ageTo = TextUtils.isEmpty(to) ? RecordModel.MAX_AGE : Integer.valueOf(to);
         String caregiver = filters.get(CAREGIVER);
         String registrationDate = filters.get(REGISTRATION_DATE);
 
-        return CaseService.getInstance().getSearchResult(id, name, ageFrom, ageTo,
+        return RecordService.getInstance().getSearchResult(id, name, ageFrom, ageTo,
                 caregiver, getDate(registrationDate));
     }
 }
