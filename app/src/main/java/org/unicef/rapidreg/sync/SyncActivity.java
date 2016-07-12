@@ -8,7 +8,7 @@ import android.support.v4.view.GravityCompat;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.base.view.BaseActivity;
 
-public class SyncActivity extends BaseActivity{
+public class SyncActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,7 +25,12 @@ public class SyncActivity extends BaseActivity{
 
     @Override
     protected void navCaseAction() {
-            intentSender.showCasesActivity(this, null, false);
+        intentSender.showCasesActivity(this, null, false);
+    }
+
+    @Override
+    protected void navTracingAction() {
+        intentSender.showTracingActivity(this);
     }
 
     @Override

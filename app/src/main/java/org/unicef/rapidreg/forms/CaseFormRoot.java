@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.forms.childcase;
+package org.unicef.rapidreg.forms;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,20 +9,20 @@ import java.util.List;
 public class CaseFormRoot {
     @SerializedName("Children")
     @Expose
-    private List<CaseSection> sections = new ArrayList<>();
+    private List<Section> sections = new ArrayList<>();
 
-    public List<CaseSection> getSections() {
+    public List<Section> getSections() {
         return sections;
     }
 
-    public void setSections(List<CaseSection> sections) {
+    public void setSections(List<Section> sections) {
         this.sections = sections;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("<Children>").append("\n");
-        for (CaseSection section : sections) {
+        for (Section section : sections) {
             sb.append(section).append("\n");
         }
         return sb.toString();

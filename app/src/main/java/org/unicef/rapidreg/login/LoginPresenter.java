@@ -8,32 +8,27 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.raizlabs.android.dbflow.data.Blob;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.IntentSender;
+import org.unicef.rapidreg.PrimeroConfiguration;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.event.NeedCacheForOfflineEvent;
 import org.unicef.rapidreg.event.NeedDoLoginOffLineEvent;
 import org.unicef.rapidreg.event.NeedGoToLoginSuccessScreenEvent;
 import org.unicef.rapidreg.event.NeedLoadFormsEvent;
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
-import org.unicef.rapidreg.model.CaseForm;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
 import org.unicef.rapidreg.model.User;
 import org.unicef.rapidreg.network.AuthService;
 import org.unicef.rapidreg.network.HttpStatusCodeHandler;
 import org.unicef.rapidreg.network.NetworkStatusManager;
-import org.unicef.rapidreg.service.CaseFormService;
 import org.unicef.rapidreg.service.UserService;
 import org.unicef.rapidreg.utils.EncryptHelper;
-import org.unicef.rapidreg.PrimeroConfiguration;
 
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Headers;
 import retrofit2.Response;

@@ -107,6 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 navigationView.setItemTextColor(caseColor);
                 break;
             case R.id.nav_tracing:
+                navTracingAction();
                 navigationView.setItemTextColor(trColor);
                 break;
             case R.id.nav_sync:
@@ -159,6 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     protected abstract void navCaseAction();
 
-    protected abstract void processBackButton();
+    protected abstract void navTracingAction();
 
+    protected abstract void processBackButton();
 }

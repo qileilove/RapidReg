@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TickBoxViewHolder extends BaseViewHolder<CaseField> {
+public class TickBoxViewHolder extends BaseViewHolder<Field> {
 
     @BindView(R.id.label)
     TextView labelView;
@@ -33,7 +33,7 @@ public class TickBoxViewHolder extends BaseViewHolder<CaseField> {
     }
 
     @Override
-    public void setValue(CaseField field) {
+    public void setValue(Field field) {
         labelView.setText(getLabel(field));
         disableUneditableField(isEditable(field), valueView);
         setEditableBackgroundStyle(isEditable(field));
@@ -46,7 +46,7 @@ public class TickBoxViewHolder extends BaseViewHolder<CaseField> {
     }
 
     @Override
-    public void setOnClickListener(final CaseField field) {
+    public void setOnClickListener(final Field field) {
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +69,7 @@ public class TickBoxViewHolder extends BaseViewHolder<CaseField> {
         disableUneditableField(editable, valueView);
     }
 
-    private List<Map<String, String>> getValues(CaseField field, String isChecked) {
+    private List<Map<String, String>> getValues(Field field, String isChecked) {
         String language = Locale.getDefault().getLanguage();
         List<Map<String, String>> values = SubformCache.get(field.getParent()) == null ?
                 new ArrayList<Map<String, String>>() : SubformCache.get(field.getParent());

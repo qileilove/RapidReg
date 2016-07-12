@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.tracing;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.childcase.Feature;
+import org.unicef.rapidreg.childcase.RegisterWrapperFragment;
+import org.unicef.rapidreg.childcase.RequestActivity;
 import org.unicef.rapidreg.event.SaveCaseEvent;
 import org.unicef.rapidreg.forms.CaseFormRoot;
 import org.unicef.rapidreg.forms.Section;
@@ -19,9 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
-public class CaseActivity extends RequestActivity {
-    public static final String TAG = CaseActivity.class.getSimpleName();
+public class TracingActivity extends RequestActivity {
+    public static final String TAG = TracingActivity.class.getSimpleName();
 
     @Override
     protected void navSyncAction() {
@@ -35,21 +37,21 @@ public class CaseActivity extends RequestActivity {
 
     @Override
     protected void navCaseAction() {
-        if (currentFeature.isEditMode()) {
-            showQuitDialog(R.id.nav_cases);
+        if (currentFeature.isDetailMode()) {
+            showQuitDialog(R.id.nav_tracing);
         } else {
             CaseFieldValueCache.clearAudioFile();
-            turnToFeature(Feature.LIST, null);
+            intentSender.showCasesActivity(this, null, false);
         }
     }
 
     @Override
     protected void navTracingAction() {
-        if (currentFeature.isDetailMode()) {
-            showQuitDialog(R.id.nav_cases);
+        if (currentFeature.isEditMode()) {
+            showQuitDialog(R.id.nav_sync);
         } else {
             CaseFieldValueCache.clearAudioFile();
-            intentSender.showTracingActivity(this);
+            intentSender.showSyncActivity(this);
         }
     }
 
@@ -111,7 +113,7 @@ public class CaseActivity extends RequestActivity {
 
         for (String field : requiredFieldNames) {
             if (TextUtils.isEmpty(CaseFieldValueCache.getValues().get(field))) {
-                Toast.makeText(CaseActivity.this, R.string.required_field_is_not_filled,
+                Toast.makeText(TracingActivity.this, R.string.required_field_is_not_filled,
                         Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -132,7 +134,7 @@ public class CaseActivity extends RequestActivity {
                                 turnToFeature(Feature.LIST, null);
                                 break;
                             case R.id.nav_sync:
-                                intentSender.showSyncActivity(CaseActivity.this);
+                                intentSender.showSyncActivity(TracingActivity.this);
                                 break;
                             default:
                                 break;
@@ -143,3 +145,4 @@ public class CaseActivity extends RequestActivity {
                 .show();
     }
 }
+

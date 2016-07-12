@@ -14,20 +14,44 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+import com.raizlabs.android.dbflow.data.Blob;
+
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.base.view.BaseActivity;
 import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
+import org.unicef.rapidreg.event.NeedLoadFormsEvent;
 import org.unicef.rapidreg.event.UpdateImageEvent;
+import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.forms.TracingFormRoot;
+import org.unicef.rapidreg.model.CaseForm;
+import org.unicef.rapidreg.model.TracingForm;
+import org.unicef.rapidreg.network.AuthService;
+import org.unicef.rapidreg.service.CaseFormService;
+import org.unicef.rapidreg.service.TracingFormService;
 import org.unicef.rapidreg.utils.ImageCompressUtil;
 import org.unicef.rapidreg.widgets.viewholder.PhotoUploadViewHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public abstract class RequestActivity extends BaseActivity {
+    public static final String TAG = RequestActivity.class.getSimpleName();
+
     protected DetailState textAreaState = DetailState.VISIBILITY;
     protected Feature currentFeature;
 
@@ -36,12 +60,24 @@ public abstract class RequestActivity extends BaseActivity {
     protected MenuItem searchMenu;
 
     private String imagePath;
+    private CompositeSubscription subscriptions;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        subscriptions = new CompositeSubscription();
 
         initToolbar();
+        turnToFeature(Feature.LIST, null);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+        subscriptions.clear();
     }
 
     @Override
@@ -164,6 +200,76 @@ public abstract class RequestActivity extends BaseActivity {
         ListFragment listFragment = (ListFragment) getSupportFragmentManager()
                 .findFragmentByTag(ListFragment.class.getSimpleName());
         listFragment.toggleMode(textAreaState.isDetailShow());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1)
+    public void onNeedLoadFormsEvent(final NeedLoadFormsEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
+        final Gson gson = new Gson();
+
+        subscriptions.add(AuthService.getInstance().getCaseFormRx(event.getCookie(),
+                Locale.getDefault().getLanguage(), true, "case")
+                .flatMap(new Func1<CaseFormRoot, Observable<CaseFormRoot>>() {
+                    @Override
+                    public Observable<CaseFormRoot> call(CaseFormRoot caseFormRoot) {
+                        if (caseFormRoot == null) {
+                            return Observable.error(new Exception());
+                        }
+                        return Observable.just(caseFormRoot);
+                    }
+                })
+                .retry(3)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<CaseFormRoot>() {
+                    @Override
+                    public void call(CaseFormRoot caseFormRoot) {
+
+                        Log.d("fengbo", "get case from");
+                        CaseFormRoot form = caseFormRoot;
+                        CaseForm caseForm = new CaseForm(new Blob(gson.toJson(form).getBytes()));
+                        CaseFormService.getInstance().saveOrUpdateForm(caseForm);
+
+                        Log.i(TAG, "load form successfully");
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.i(TAG, throwable.getMessage());
+                    }
+                }));
+
+        subscriptions.add(AuthService.getInstance().getTracingFormRx(event.getCookie(),
+                Locale.getDefault().getLanguage(), true, "tracing_request")
+                .flatMap(new Func1<TracingFormRoot, Observable<TracingFormRoot>>() {
+                    @Override
+                    public Observable<TracingFormRoot> call(TracingFormRoot caseFormRoot) {
+                        if (caseFormRoot == null) {
+                            return Observable.error(new Exception());
+                        }
+                        return Observable.just(caseFormRoot);
+                    }
+                })
+                .retry(3)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<TracingFormRoot>() {
+                    @Override
+                    public void call(TracingFormRoot tracingFormRoot) {
+                        TracingFormRoot form = tracingFormRoot;
+
+                        Log.d("fengbo", "get tracing from");
+                        TracingForm tracingForm = new TracingForm(new Blob(gson.toJson(form).getBytes()));
+                        TracingFormService.getInstance().saveOrUpdateForm(tracingForm);
+
+                        Log.i(TAG, "load form successfully");
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.i(TAG, throwable.getMessage());
+                    }
+                }));
     }
 
     protected abstract void save();

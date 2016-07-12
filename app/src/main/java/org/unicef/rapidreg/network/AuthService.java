@@ -3,10 +3,11 @@ package org.unicef.rapidreg.network;
 
 import android.content.Context;
 
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
+import org.unicef.rapidreg.PrimeroConfiguration;
+import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.forms.TracingFormRoot;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
-import org.unicef.rapidreg.PrimeroConfiguration;
 
 import retrofit2.Response;
 import rx.Observable;
@@ -22,6 +23,7 @@ public class AuthService extends BaseRetrofitService {
     }
 
     private static AuthService self = null;
+
     public static AuthService getInstance() {
         if (self == null) {
             self = new AuthService();
@@ -39,11 +41,18 @@ public class AuthService extends BaseRetrofitService {
         return serviceInterface.login(body);
     }
 
-    public Observable<CaseFormRoot> getFormRx(String cookie,
-                                              String locale,
-                                              Boolean isMobile,
-                                              String parentForm) {
-        return serviceInterface.getForm(cookie, locale, isMobile, parentForm);
+    public Observable<CaseFormRoot> getCaseFormRx(String cookie,
+                                                  String locale,
+                                                  Boolean isMobile,
+                                                  String parentForm) {
+        return serviceInterface.getCaseForm(cookie, locale, isMobile, parentForm);
+    }
+
+    public Observable<TracingFormRoot> getTracingFormRx(String cookie,
+                                                        String locale,
+                                                        Boolean isMobile,
+                                                        String parentForm) {
+        return serviceInterface.getTracingForm(cookie, locale, isMobile, parentForm);
     }
 
 }

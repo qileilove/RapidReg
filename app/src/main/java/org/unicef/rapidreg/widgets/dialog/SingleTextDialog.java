@@ -5,14 +5,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import org.unicef.rapidreg.forms.childcase.CaseField;
+import org.unicef.rapidreg.forms.Field;
 
 public class SingleTextDialog extends BaseDialog {
 
     private EditText editText;
 
-    public SingleTextDialog(Context context, CaseField caseField, TextView resultView, ViewSwitcher viewSwitcher) {
-        super(context, caseField, resultView, viewSwitcher);
+    public SingleTextDialog(Context context, Field field, TextView resultView, ViewSwitcher viewSwitcher) {
+        super(context, field, resultView, viewSwitcher);
     }
 
     @Override

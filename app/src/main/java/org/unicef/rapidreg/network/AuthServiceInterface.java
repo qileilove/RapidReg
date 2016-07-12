@@ -1,7 +1,8 @@
 package org.unicef.rapidreg.network;
 
 
-import org.unicef.rapidreg.forms.childcase.CaseFormRoot;
+import org.unicef.rapidreg.forms.CaseFormRoot;
+import org.unicef.rapidreg.forms.TracingFormRoot;
 import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
 
@@ -20,9 +21,17 @@ public interface AuthServiceInterface {
     Observable<Response<LoginResponse>> login(@Body LoginRequestBody body);
 
     @GET("/api/form_sections")
-    Observable<CaseFormRoot> getForm(
+    Observable<CaseFormRoot> getCaseForm(
             @Header("Cookie") String cookie,
             @Query("locale") String locale,
             @Query("mobile") Boolean isMobile,
             @Query("parent_form") String parentForm);
+
+    @GET("/api/form_sections")
+    Observable<TracingFormRoot> getTracingForm(
+            @Header("Cookie") String cookie,
+            @Query("locale") String locale,
+            @Query("mobile") Boolean isMobile,
+            @Query("parent_form") String parentForm
+    );
 }
