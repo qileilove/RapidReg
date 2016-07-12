@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.childcase.CaseActivity;
-import org.unicef.rapidreg.childcase.CaseRegisterAdapter;
+import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.service.cache.SubformCache;
 
@@ -94,7 +94,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
                 updateIndexForFields();
             }
         });
-        deleteBtn.setVisibility(activity.getCurrentCaseFeature().isEditMode() ?
+        deleteBtn.setVisibility(activity.getCurrentFeature().isEditMode() ?
                 View.VISIBLE : View.GONE);
     }
 
@@ -106,7 +106,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
 
         List<Field> fields = cloneFields();
         assignIndexForFields(fields, getInsertIndex());
-        CaseRegisterAdapter adapter = new CaseRegisterAdapter(activity, fields, false);
+        RecordRegisterAdapter adapter = new RecordRegisterAdapter(activity, fields, false);
         fieldList.setAdapter(adapter);
     }
 
@@ -126,7 +126,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
         for (int i = 0; i < getInsertIndex(); i++) {
             View child = parent.getChildAt(i);
             RecyclerView fieldList = (RecyclerView) child.findViewById(R.id.field_list);
-            CaseRegisterAdapter adapter = (CaseRegisterAdapter) fieldList.getAdapter();
+            RecordRegisterAdapter adapter = (RecordRegisterAdapter) fieldList.getAdapter();
             List<Field> fields = adapter.getFields();
             assignIndexForFields(fields, i);
         }

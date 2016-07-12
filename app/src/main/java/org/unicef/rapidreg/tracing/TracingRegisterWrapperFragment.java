@@ -10,8 +10,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.base.view.RecordRegisterWrapperFragment;
-import org.unicef.rapidreg.childcase.CaseRegisterAdapter;
-import org.unicef.rapidreg.event.SaveCaseEvent;
+import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
+import org.unicef.rapidreg.event.SaveTracingEvent;
 import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.TracingFormService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
@@ -36,7 +36,7 @@ public class TracingRegisterWrapperFragment extends RecordRegisterWrapperFragmen
 
         initTracingFormData();
 
-        miniFormAdapter = new CaseRegisterAdapter(getActivity(), miniFields, true);
+        miniFormAdapter = new RecordRegisterAdapter(getActivity(), miniFields, true);
         miniFormAdapter.setCasePhotoAdapter(initCasePhotoAdapter());
 
         initFullFormContainer();
@@ -51,7 +51,7 @@ public class TracingRegisterWrapperFragment extends RecordRegisterWrapperFragmen
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void saveCase(SaveCaseEvent event) {
+    public void saveTracing(SaveTracingEvent event) {
         List<String> photoPaths = casePhotoAdapter.getAllItems();
         RecordService.getInstance().saveOrUpdateCase(CaseFieldValueCache.getValues(),
                 SubformCache.getValues(),

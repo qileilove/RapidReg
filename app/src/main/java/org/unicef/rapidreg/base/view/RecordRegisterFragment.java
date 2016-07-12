@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.base.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,18 +13,19 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CaseRegisterFragment extends MvpFragment<CaseRegisterView, CaseRegisterPresenter>
-        implements CaseRegisterView {
+public class RecordRegisterFragment extends MvpFragment<RecordRegisterView, RecordRegisterPresenter>
+        implements RecordRegisterView {
 
     @BindView(R.id.register_forms_content)
     RecyclerView fieldList;
 
-    private CaseRegisterAdapter caseRegisterAdapter;
+    private RecordRegisterAdapter recordRegisterAdapter;
 
     private CasePhotoAdapter casePhotoAdapter;
 
@@ -53,22 +54,22 @@ public class CaseRegisterFragment extends MvpFragment<CaseRegisterView, CaseRegi
 
     @NonNull
     @Override
-    public CaseRegisterPresenter createPresenter() {
-        return new CaseRegisterPresenter();
+    public RecordRegisterPresenter createPresenter() {
+        return new RecordRegisterPresenter();
     }
 
     @Override
-    public void initView(CaseRegisterAdapter adapter) {
-        caseRegisterAdapter = adapter;
+    public void initView(RecordRegisterAdapter adapter) {
+        recordRegisterAdapter = adapter;
         RecyclerView.LayoutManager layout = new LinearLayoutManager(getContext());
         layout.setAutoMeasureEnabled(true);
         fieldList.setLayoutManager(layout);
-        fieldList.setAdapter(caseRegisterAdapter);
-        caseRegisterAdapter.setCasePhotoAdapter(casePhotoAdapter);
+        fieldList.setAdapter(recordRegisterAdapter);
+        recordRegisterAdapter.setCasePhotoAdapter(casePhotoAdapter);
     }
 
-    public CaseRegisterAdapter getCaseRegisterAdapter() {
-        return caseRegisterAdapter;
+    public RecordRegisterAdapter getRegisterAdapter() {
+        return recordRegisterAdapter;
     }
 
     public void clearFocus() {

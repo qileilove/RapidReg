@@ -23,10 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.CaseActivity;
-import org.unicef.rapidreg.childcase.CaseFeature;
-import org.unicef.rapidreg.childcase.CaseRegisterAdapter;
-import org.unicef.rapidreg.childcase.CaseRegisterFragment;
+import org.unicef.rapidreg.childcase.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import org.unicef.rapidreg.event.UpdateImageEvent;
 import org.unicef.rapidreg.forms.Field;
@@ -69,8 +66,8 @@ public class RecordRegisterWrapperFragment extends Fragment {
     protected RecordForm form;
     protected List<Section> sections;
     protected List<Field> miniFields;
-    protected CaseRegisterAdapter miniFormAdapter;
-    protected CaseRegisterAdapter fullFormAdapter;
+    protected RecordRegisterAdapter miniFormAdapter;
+    protected RecordRegisterAdapter fullFormAdapter;
     protected CasePhotoAdapter casePhotoAdapter;
 
     protected long recordId;
@@ -103,7 +100,7 @@ public class RecordRegisterWrapperFragment extends Fragment {
     }
 
     private void initFloatingActionButton() {
-        if (((RecordActivity) getActivity()).getCurrentCaseFeature().isDetailMode()) {
+        if (((RecordActivity) getActivity()).getCurrentFeature().isDetailMode()) {
             editCaseButton.setVisibility(View.VISIBLE);
         } else {
             editCaseButton.setVisibility(View.GONE);
@@ -127,7 +124,7 @@ public class RecordRegisterWrapperFragment extends Fragment {
                 fullFormSwipeLayout.setScrollChild(
                         adapter.getPage(position).getView()
                                 .findViewById(R.id.register_forms_content));
-                fullFormAdapter = ((CaseRegisterFragment) adapter.getPage(position)).getCaseRegisterAdapter();
+                fullFormAdapter = ((RecordRegisterFragment) adapter.getPage(position)).getRegisterAdapter();
                 fullFormAdapter.setCasePhotoAdapter(casePhotoAdapter);
                 fullFormAdapter.notifyDataSetChanged();
             }
@@ -189,7 +186,7 @@ public class RecordRegisterWrapperFragment extends Fragment {
             bundle.putStringArrayList("case_photos",
                     (ArrayList<String>) casePhotoAdapter.getAllItems());
 
-            pages.add(FragmentPagerItem.of(values[0], CaseRegisterFragment.class, bundle));
+            pages.add(FragmentPagerItem.of(values[0], RecordRegisterFragment.class, bundle));
         }
         return pages;
     }
@@ -238,7 +235,7 @@ public class RecordRegisterWrapperFragment extends Fragment {
     }
 
     private void addProfileFieldForDetailsPage() {
-        if (((CaseActivity) getActivity()).getCurrentCaseFeature() == CaseFeature.DETAILS) {
+        if (((RecordActivity) getActivity()).getCurrentFeature().isDetailMode()) {
             Field field = new Field();
             field.setType(Field.TYPE_MINI_FORM_PROFILE);
             try {
@@ -257,7 +254,7 @@ public class RecordRegisterWrapperFragment extends Fragment {
 
         FragmentStatePagerItemAdapter adapter =
                 (FragmentStatePagerItemAdapter) viewPager.getAdapter();
-        CaseRegisterFragment fragment = (CaseRegisterFragment) adapter
+        RecordRegisterFragment fragment = (RecordRegisterFragment) adapter
                 .getPage(viewPager.getCurrentItem());
         if (fragment != null) {
             fragment.clearFocus();

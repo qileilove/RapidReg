@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.unicef.rapidreg.base.view.RecordActivity;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.widgets.viewholder.AudioUploadViewHolder;
@@ -23,7 +24,7 @@ import org.unicef.rapidreg.widgets.viewholder.TickBoxViewHolder;
 
 import java.util.List;
 
-public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class RecordRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private static final String LAYOUT = "layout";
     private static final String PREFIX = "form_";
@@ -42,15 +43,15 @@ public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private boolean isMiniForm;
 
     private List<Field> fields;
-    private CaseActivity activity;
+    private RecordActivity activity;
     protected LayoutInflater inflater;
     protected Resources resources;
     protected String packageName;
     private CasePhotoAdapter adapter;
 
-    public CaseRegisterAdapter(Context context, List<Field> fields, boolean isMiniForm) {
+    public RecordRegisterAdapter(Context context, List<Field> fields, boolean isMiniForm) {
         this.fields = fields;
-        this.activity = (CaseActivity) context;
+        this.activity = (RecordActivity) context;
         this.isMiniForm = isMiniForm;
 
         inflater = LayoutInflater.from(context);
@@ -120,7 +121,7 @@ public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         Field field = fields.get(position);
         holder.setValue(field);
 
-        if (!activity.getCurrentCaseFeature().isDetailMode()) {
+        if (!activity.getCurrentFeature().isDetailMode()) {
             holder.setOnClickListener(field);
         } else {
             holder.setFieldEditable(false);
@@ -149,7 +150,7 @@ public class CaseRegisterAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             return VIEW_HOLDER_TICK_BOX;
         }
         if (field.isPhotoUploadBox()) {
-            if (activity.getCurrentCaseFeature() != CaseFeature.DETAILS) {
+            if (activity.getCurrentFeature() != CaseFeature.DETAILS) {
                 return VIEW_HOLDER_PHOTO_UPLOAD_BOX;
             }
             return isMiniForm ? VIEW_HOLDER_PHOTO_UPLOAD_BOX_MINI_FORM : VIEW_HOLDER_PHOTO_UPLOAD_BOX;

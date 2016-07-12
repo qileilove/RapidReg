@@ -35,7 +35,7 @@ public class TracingActivity extends RecordActivity {
 
     @Override
     protected void navCaseAction() {
-        if (currentCaseFeature.isDetailMode()) {
+        if (currentFeature.isDetailMode()) {
             showQuitDialog(R.id.nav_tracing);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -45,7 +45,7 @@ public class TracingActivity extends RecordActivity {
 
     @Override
     protected void navTracingAction() {
-        if (currentCaseFeature.isEditMode()) {
+        if (currentFeature.isEditMode()) {
             showQuitDialog(R.id.nav_sync);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -55,9 +55,9 @@ public class TracingActivity extends RecordActivity {
 
     @Override
     protected void processBackButton() {
-        if (currentCaseFeature.isListMode()) {
+        if (currentFeature.isListMode()) {
             logOut(this);
-        } else if (currentCaseFeature.isEditMode()) {
+        } else if (currentFeature.isEditMode()) {
             showQuitDialog(R.id.nav_cases);
         } else {
             CaseFieldValueCache.clearAudioFile();

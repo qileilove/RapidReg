@@ -36,7 +36,7 @@ public class CaseRegisterWrapperFragment extends RecordRegisterWrapperFragment {
 
         initCaseFormData();
 
-        miniFormAdapter = new CaseRegisterAdapter(getActivity(), miniFields, true);
+        miniFormAdapter = new RecordRegisterAdapter(getActivity(), miniFields, true);
         miniFormAdapter.setCasePhotoAdapter(initCasePhotoAdapter());
 
         initFullFormContainer();

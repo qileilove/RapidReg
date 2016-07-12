@@ -54,7 +54,7 @@ public abstract class RecordActivity extends BaseActivity {
     public static final String TAG = RecordActivity.class.getSimpleName();
 
     protected DetailState textAreaState = DetailState.VISIBILITY;
-    protected Feature currentCaseFeature;
+    protected Feature currentFeature;
 
     protected MenuItem showHideMenu;
     protected MenuItem saveMenu;
@@ -98,7 +98,7 @@ public abstract class RecordActivity extends BaseActivity {
 
     @Override
     protected void navSyncAction() {
-        if (currentCaseFeature.isEditMode()) {
+        if (currentFeature.isEditMode()) {
             showQuitDialog(R.id.nav_sync);
         } else {
             CaseFieldValueCache.clearAudioFile();
@@ -119,12 +119,12 @@ public abstract class RecordActivity extends BaseActivity {
         }
     }
 
-    public Feature getCurrentCaseFeature() {
-        return currentCaseFeature;
+    public Feature getCurrentFeature() {
+        return currentFeature;
     }
 
     public void turnToFeature(Feature feature, Bundle args) {
-        currentCaseFeature = feature;
+        currentFeature = feature;
         changeToolbarTitle(feature.getTitleId());
         changeToolbarIcon(feature);
         try {
@@ -144,7 +144,7 @@ public abstract class RecordActivity extends BaseActivity {
             Bundle args = new Bundle();
             args.putLong("case_id", caseId);
 
-            currentCaseFeature = caseFeature;
+            currentFeature = caseFeature;
 
             turnToFeature(caseFeature, args);
         } catch (Exception e) {

@@ -43,14 +43,14 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     public void setValue(Object field) {
         final boolean audiofileExists = StreamUtil.isFileExists(mFileName);
 
-        if (!activity.getCurrentCaseFeature().isEditMode()) {
+        if (!activity.getCurrentFeature().isEditMode()) {
             initPlayAudioUI();
         }
 
         if (audiofileExists) {
             initPlayAudioUI();
             showDeleteIconWhenIsEditMode();
-        } else if (activity.getCurrentCaseFeature().isEditMode()) {
+        } else if (activity.getCurrentFeature().isEditMode()) {
             initAudioRecordUI();
         }
     }
@@ -96,7 +96,7 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     }
 
     private void showDeleteIconWhenIsEditMode() {
-        if (activity.getCurrentCaseFeature().isEditMode()) {
+        if (activity.getCurrentFeature().isEditMode()) {
             audioDeleteButton.setVisibility(View.VISIBLE);
         }
     }
