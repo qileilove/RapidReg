@@ -78,20 +78,6 @@ public class TracingActivity extends RequestActivity {
         }
     }
 
-    public void turnToDetailOrEditPage(Feature feature, long caseId) {
-        try {
-
-            Bundle args = new Bundle();
-            args.putLong("case_id", caseId);
-
-            currentFeature = feature;
-
-            turnToFeature(feature, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void clearFocusToMakeLastFieldSaved() {
         RegisterWrapperFragment fragment =
                 (RegisterWrapperFragment) getSupportFragmentManager()

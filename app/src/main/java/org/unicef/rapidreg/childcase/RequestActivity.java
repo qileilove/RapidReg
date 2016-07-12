@@ -128,6 +128,20 @@ public abstract class RequestActivity extends BaseActivity {
         }
     }
 
+    public void turnToDetailOrEditPage(Feature feature, long caseId) {
+        try {
+
+            Bundle args = new Bundle();
+            args.putLong("case_id", caseId);
+
+            currentFeature = feature;
+
+            turnToFeature(feature, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private String getOutputMediaFilePath() {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
                 + File.separator + getApplicationContext().getPackageName());
