@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.base.view.RequestActivity;
+import org.unicef.rapidreg.base.view.RecordActivity;
 import org.unicef.rapidreg.childcase.CaseFeature;
 import org.unicef.rapidreg.childcase.CaseRegisterWrapperFragment;
 import org.unicef.rapidreg.event.SaveTracingEvent;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TracingActivity extends RequestActivity {
+public class TracingActivity extends RecordActivity {
     public static final String TAG = TracingActivity.class.getSimpleName();
 
     @Override

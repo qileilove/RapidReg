@@ -50,8 +50,8 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public abstract class RequestActivity extends BaseActivity {
-    public static final String TAG = RequestActivity.class.getSimpleName();
+public abstract class RecordActivity extends BaseActivity {
+    public static final String TAG = RecordActivity.class.getSimpleName();
 
     protected DetailState textAreaState = DetailState.VISIBILITY;
     protected Feature currentCaseFeature;
