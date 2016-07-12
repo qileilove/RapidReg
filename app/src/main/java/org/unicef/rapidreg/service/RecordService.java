@@ -93,6 +93,14 @@ public class RecordService {
         return recordDao.getAllCasesOrderByAge(false);
     }
 
+    public List<RecordModel> getTracingListOrderByDateASC() {
+        return recordDao.getAllTracingsOrderByDate(true);
+    }
+
+    public List<RecordModel> getTracingListOrderByDateDES() {
+        return recordDao.getAllTracingsOrderByDate(false);
+    }
+
     public Map<String, String> getCaseMapByUniqueId(String uniqueId) {
         RecordModel child = recordDao.getCaseByUniqueId(uniqueId);
         if (child == null) {

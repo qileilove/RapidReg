@@ -18,6 +18,9 @@ import android.widget.ViewSwitcher;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.view.RecordListAdapter;
+import org.unicef.rapidreg.base.view.RecordListPresenter;
+import org.unicef.rapidreg.base.view.RecordListView;
 import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.widgets.ClearableEditText;
@@ -34,9 +37,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresenter>
-        implements CaseListView {
-    public static final String TAG = CaseSearchFragment.class.getSimpleName();
+public class SearchFragment extends MvpFragment<RecordListView, RecordListPresenter>
+        implements RecordListView {
+    public static final String TAG = SearchFragment.class.getSimpleName();
 
     private static final int HAVE_RESULT_LIST = 0;
     private static final int HAVE_NO_RESULT = 1;
@@ -81,7 +84,7 @@ public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresen
     @BindView(R.id.search_result)
     ViewSwitcher searchResultSwitcher;
 
-    private CaseListAdapter adapter;
+    private RecordListAdapter adapter;
 
     @Nullable
     @Override
@@ -98,12 +101,12 @@ public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresen
     }
 
     @Override
-    public CaseListPresenter createPresenter() {
-        return new CaseListPresenter();
+    public RecordListPresenter createPresenter() {
+        return new RecordListPresenter(RecordModel.CASE);
     }
 
     @Override
-    public void initView(final CaseListAdapter adapter) {
+    public void initView(final RecordListAdapter adapter) {
         this.adapter = adapter;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -163,7 +166,7 @@ public class CaseSearchFragment extends MvpFragment<CaseListView, CaseListPresen
         int resultIndex = searchResult.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
         searchResultSwitcher.setDisplayedChild(resultIndex);
 
-        adapter.setCaseList(searchResult);
+        adapter.setRecordList(searchResult);
         adapter.notifyDataSetChanged();
     }
 

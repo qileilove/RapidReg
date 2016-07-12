@@ -1,4 +1,4 @@
-package org.unicef.rapidreg.childcase;
+package org.unicef.rapidreg.tracing;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.base.view.RecordListAdapter;
+import org.unicef.rapidreg.childcase.CaseFeature;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.CasePhotoService;
@@ -23,14 +24,14 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class CaseListAdapter extends RecordListAdapter {
+public class TracingListAdapter extends RecordListAdapter {
 
-    public CaseListAdapter(Context activity) {
+    public TracingListAdapter(Context activity) {
         super(activity);
     }
 
     @Override
-    public void onBindViewHolder(RecordListHolder holder, int position) {
+    public void onBindViewHolder(RecordListAdapter.RecordListHolder holder, int position) {
         final RecordModel record = recordList.get(position);
 
         final String caseJson = new String(record.getContent().getBlob());
@@ -110,8 +111,8 @@ public class CaseListAdapter extends RecordListAdapter {
     }
 
     public enum Gender {
-        MALE("BOY", R.drawable.avatar_placeholder, R.drawable.boy, R.color.boy_blue),
-        FEMALE("GIRL", R.drawable.avatar_placeholder, R.drawable.girl, R.color.girl_red),
+        MALE("Male", R.drawable.avatar_placeholder, R.drawable.boy, R.color.boy_blue),
+        FEMALE("Female", R.drawable.avatar_placeholder, R.drawable.girl, R.color.girl_red),
         UNKNOWN(null, R.drawable.avatar_placeholder, R.drawable.gender_default, R.color.transparent);
 
         private String name;
