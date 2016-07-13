@@ -1,7 +1,6 @@
 package org.unicef.rapidreg.base;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 
@@ -37,7 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecordRegisterWrapperFragment extends Fragment {
+public abstract class RecordRegisterWrapperFragment extends Fragment {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
@@ -175,21 +173,6 @@ public class RecordRegisterWrapperFragment extends Fragment {
         }
     }
 
-    @NonNull
-    private FragmentPagerItems getPages() {
-        FragmentPagerItems pages = new FragmentPagerItems(getActivity());
-        for (Section section : sections) {
-            String[] values = section.getName().values().toArray(new String[0]);
-            Bundle bundle = new Bundle();
-
-            bundle.putStringArrayList("case_photos",
-                    (ArrayList<String>) casePhotoAdapter.getAllItems());
-
-            pages.add(FragmentPagerItem.of(values[0], RecordRegisterFragment.class, bundle));
-        }
-        return pages;
-    }
-
     protected CasePhotoAdapter initCasePhotoAdapter() {
         casePhotoAdapter = new CasePhotoAdapter(getContext(), new ArrayList<String>());
 
@@ -259,4 +242,6 @@ public class RecordRegisterWrapperFragment extends Fragment {
             fragment.clearFocus();
         }
     }
+
+    protected abstract FragmentPagerItems getPages();
 }

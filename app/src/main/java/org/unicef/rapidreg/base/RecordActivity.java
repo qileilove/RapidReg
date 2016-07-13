@@ -23,7 +23,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.unicef.rapidreg.R;
-import org.unicef.rapidreg.childcase.CaseListFragment;
 import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
 import org.unicef.rapidreg.event.NeedLoadFormsEvent;
 import org.unicef.rapidreg.event.UpdateImageEvent;
@@ -137,15 +136,15 @@ public abstract class RecordActivity extends BaseActivity {
         }
     }
 
-    public void turnToDetailOrEditPage(Feature caseFeature, long caseId) {
+    public void turnToDetailOrEditPage(Feature feature, long recordId) {
         try {
 
             Bundle args = new Bundle();
-            args.putLong("case_id", caseId);
+            args.putLong("record_id", recordId);
 
-            currentFeature = caseFeature;
+            currentFeature = feature;
 
-            turnToFeature(caseFeature, args);
+            turnToFeature(feature, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,13 +190,13 @@ public abstract class RecordActivity extends BaseActivity {
         toolbar.setTitle(resId);
     }
 
-    protected void changeToolbarIcon(Feature caseFeature) {
+    protected void changeToolbarIcon(Feature feature) {
         hideAllToolbarIcons();
 
-        if (caseFeature.isListMode()) {
+        if (feature.isListMode()) {
             showHideMenu.setVisible(true);
             searchMenu.setVisible(true);
-        } else if (caseFeature.isEditMode()) {
+        } else if (feature.isEditMode()) {
             saveMenu.setVisible(true);
         }
     }
@@ -220,9 +219,9 @@ public abstract class RecordActivity extends BaseActivity {
         textAreaState = textAreaState.getNextState();
 
         showHideMenu.setIcon(textAreaState.getResId());
-        CaseListFragment caseListFragment = (CaseListFragment) getSupportFragmentManager()
-                .findFragmentByTag(CaseListFragment.class.getSimpleName());
-        caseListFragment.toggleMode(textAreaState.isDetailShow());
+        RecordListFragment listFragment = (RecordListFragment) getSupportFragmentManager()
+                .findFragmentByTag(RecordListFragment.class.getSimpleName());
+        listFragment.toggleMode(textAreaState.isDetailShow());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1)

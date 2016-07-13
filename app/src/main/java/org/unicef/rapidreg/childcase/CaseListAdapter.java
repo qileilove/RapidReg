@@ -13,7 +13,7 @@ import org.unicef.rapidreg.base.RecordListAdapter;
 import org.unicef.rapidreg.model.CasePhoto;
 import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.CasePhotoService;
-import org.unicef.rapidreg.service.RecordService;
+import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
 import org.unicef.rapidreg.utils.StreamUtil;
@@ -39,7 +39,7 @@ public class CaseListAdapter extends RecordListAdapter {
         }.getType();
 
         final Map<String, String> caseInfo = new Gson().fromJson(caseJson, caseType);
-        caseInfo.put(RecordService.CASE_ID, record.getUniqueId());
+        caseInfo.put(CaseService.CASE_ID, record.getUniqueId());
 
         final Type subformType = new TypeToken<Map<String, List<Map<String, String>>>>() {
         }.getType();
@@ -76,7 +76,7 @@ public class CaseListAdapter extends RecordListAdapter {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecordService.getInstance().clearCaseCache();
+                CaseService.getInstance().clearCaseCache();
 
                 setProfileForMiniForm(record, caseInfo, shortUUID);
                 CaseFieldValueCache.setValues(caseInfo);

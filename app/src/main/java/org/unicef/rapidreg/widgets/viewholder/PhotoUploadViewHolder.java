@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.RecordActivity;
 import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.childcase.config.CasePhotoConfig;
 import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
@@ -65,7 +66,7 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
     }
 
     private void setAddPhotoButtonIcon() {
-        if (((CaseActivity) context).getCurrentFeature().isDetailMode()) {
+        if (((RecordActivity) context).getCurrentFeature().isDetailMode()) {
             addImageButton.setVisibility(View.GONE);
             if (adapter.isEmpty()) {
                 noPhotoPromoteView.setVisibility(View.VISIBLE);
@@ -128,11 +129,11 @@ public class PhotoUploadViewHolder extends BaseViewHolder<Field> {
                     Uri saveUri = Uri.fromFile(new File(CasePhotoConfig.MEDIA_PATH_FOR_CAMERA));
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, saveUri);
-                    ((CaseActivity) context).startActivityForResult(intent, REQUEST_CODE_CAMERA);
+                    ((RecordActivity) context).startActivityForResult(intent, REQUEST_CODE_CAMERA);
                 } else if (fromGalleryItem.equals(items[item])) {
                     Intent intent = new Intent(Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    ((CaseActivity) context).startActivityForResult(intent, REQUEST_CODE_GALLERY);
+                    ((RecordActivity) context).startActivityForResult(intent, REQUEST_CODE_GALLERY);
                 } else if (cancelItem.equals(items[item])) {
                     dialog.dismiss();
                 }

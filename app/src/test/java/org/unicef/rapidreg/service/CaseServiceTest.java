@@ -4,8 +4,8 @@ import com.raizlabs.android.dbflow.data.Blob;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.unicef.rapidreg.db.RecordDao;
-import org.unicef.rapidreg.db.impl.RecordDaoImpl;
+import org.unicef.rapidreg.db.CaseDao;
+import org.unicef.rapidreg.db.impl.CaseDaoImpl;
 import org.unicef.rapidreg.forms.Field;
 import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.model.RecordModel;
@@ -21,9 +21,9 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RecordServiceTest {
-    private RecordDao recordDao = mock(RecordDaoImpl.class);
-    private RecordService recordService = new RecordService(recordDao);
+public class CaseServiceTest {
+    private CaseDao caseDao = mock(CaseDaoImpl.class);
+    private CaseService caseService = new CaseService(caseDao);
     private RecordModel child;
 
     @Before
@@ -35,15 +35,15 @@ public class RecordServiceTest {
     public void should_get_case_map_by_unique_id() {
         String caseJson = "{\"name\": \"jack\"}";
         child.setContent(new Blob(caseJson.getBytes()));
-        when(recordDao.getCaseByUniqueId("uuid")).thenReturn(child);
-        Map<String, String> cases = recordService.getCaseMapByUniqueId("uuid");
+        when(caseDao.getCaseByUniqueId("uuid")).thenReturn(child);
+        Map<String, String> cases = caseService.getCaseMapByUniqueId("uuid");
 
         assertThat(cases.size(), is(2));
-        assertThat(cases.get(RecordService.CASE_ID), is("uuid"));
+        assertThat(cases.get(CaseService.CASE_ID), is("uuid"));
         assertThat(cases.get("name"), is("jack"));
 
-        when(recordDao.getCaseByUniqueId("uuid")).thenReturn(null);
-        cases = recordService.getCaseMapByUniqueId("uuid");
+        when(caseDao.getCaseByUniqueId("uuid")).thenReturn(null);
+        cases = caseService.getCaseMapByUniqueId("uuid");
 
         assertThat(cases.size(), is(0));
     }
@@ -55,7 +55,7 @@ public class RecordServiceTest {
         fields.add(makeCaseField("sex", true));
         fields.add(makeCaseField("name", false));
 
-        List<String> requiredFiledNames = recordService.fetchRequiredFiledNames(fields);
+        List<String> requiredFiledNames = caseService.fetchRequiredFiledNames(fields);
         assertThat(requiredFiledNames, hasSize(2));
         assertThat(requiredFiledNames, containsInAnyOrder("sex", "age"));
     }
@@ -67,7 +67,7 @@ public class RecordServiceTest {
         fields.add(makeCaseField("sex", false));
         fields.add(makeCaseField("name", false));
 
-        List<String> requiredFiledNames = recordService.fetchRequiredFiledNames(fields);
+        List<String> requiredFiledNames = caseService.fetchRequiredFiledNames(fields);
         assertThat(requiredFiledNames, hasSize(0));
     }
 

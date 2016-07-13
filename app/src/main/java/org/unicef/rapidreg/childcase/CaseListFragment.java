@@ -1,5 +1,6 @@
 package org.unicef.rapidreg.childcase;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -8,9 +9,10 @@ import org.unicef.rapidreg.base.RecordListAdapter;
 import org.unicef.rapidreg.base.RecordListFragment;
 import org.unicef.rapidreg.base.RecordListPresenter;
 import org.unicef.rapidreg.model.RecordModel;
-import org.unicef.rapidreg.service.RecordService;
+import org.unicef.rapidreg.service.CaseService;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class CaseListFragment extends RecordListFragment {
@@ -27,6 +29,18 @@ public class CaseListFragment extends RecordListFragment {
     @Override
     public RecordListPresenter createPresenter() {
         return new RecordListPresenter(RecordModel.CASE);
+    }
+
+    @Override
+    protected void initListContainer(RecordListAdapter adapter) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        listContainer.setLayoutManager(layoutManager);
+        listContainer.setAdapter(adapter);
+
+        List<? extends RecordModel> recordList = CaseService.getInstance().getCaseList();
+        int index = recordList.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
+        viewSwitcher.setDisplayedChild(index);
     }
 
     @Override
@@ -47,19 +61,19 @@ public class CaseListFragment extends RecordListFragment {
             }
 
             private void handleItemSelection(int position) {
-                RecordService recordService = RecordService.getInstance();
+                CaseService caseService = CaseService.getInstance();
                 switch (SPINNER_STATES[position]) {
                     case AGE_ASC:
-                        adapter.setRecordList(recordService.getCaseListOrderByAgeASC());
+                        adapter.setRecordList(caseService.getCaseListOrderByAgeASC());
                         break;
                     case AGE_DES:
-                        adapter.setRecordList(recordService.getCaseListOrderByAgeDES());
+                        adapter.setRecordList(caseService.getCaseListOrderByAgeDES());
                         break;
                     case DATE_ASC:
-                        adapter.setRecordList(recordService.getCaseListOrderByDateASC());
+                        adapter.setRecordList(caseService.getCaseListOrderByDateASC());
                         break;
                     case DATE_DES:
-                        adapter.setRecordList(recordService.getCaseListOrderByDateDES());
+                        adapter.setRecordList(caseService.getCaseListOrderByDateDES());
                         break;
                     default:
                         break;

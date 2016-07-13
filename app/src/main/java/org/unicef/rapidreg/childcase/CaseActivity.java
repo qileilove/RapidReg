@@ -14,7 +14,7 @@ import org.unicef.rapidreg.event.SaveCaseEvent;
 import org.unicef.rapidreg.forms.CaseFormRoot;
 import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.RecordService;
+import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class CaseActivity extends RecordActivity {
         List<String> requiredFieldNames = new ArrayList<>();
 
         for (Section section : caseForm.getSections()) {
-            Collections.addAll(requiredFieldNames, RecordService.getInstance()
+            Collections.addAll(requiredFieldNames, CaseService.getInstance()
                     .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
         }
 

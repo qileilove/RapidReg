@@ -54,7 +54,7 @@ public class SyncPresenter extends MvpBasePresenter<SyncView> {
         }.getType();
 
         final Map<String, String> caseInfo = new Gson().fromJson(jsonElement, caseType);
-        //caseInfo.put(RecordService.CASE_ID, caseItem.getUniqueId());
+        //caseInfo.put(CaseService.CASE_ID, caseItem.getUniqueId());
 
         final Type subformType = new TypeToken<Map<String, List<Map<String, String>>>>() {
         }.getType();

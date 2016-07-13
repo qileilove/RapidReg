@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.RecordActivity;
 import org.unicef.rapidreg.base.RecordRegisterAdapter;
 import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.forms.Field;
@@ -29,7 +30,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
     @BindView(R.id.add_subform)
     Button addSubformBtn;
 
-    private CaseActivity activity;
+    private RecordActivity activity;
     private ViewGroup parent;
     private List<Field> fields;
     private String fieldParent;
@@ -37,7 +38,7 @@ public class SubformViewHolder extends BaseViewHolder<Field> {
     public SubformViewHolder(Context context, View itemView) {
         super(context, itemView);
         ButterKnife.bind(this, itemView);
-        activity = (CaseActivity) context;
+        activity = (RecordActivity) context;
         parent = (ViewGroup) itemView;
     }
 

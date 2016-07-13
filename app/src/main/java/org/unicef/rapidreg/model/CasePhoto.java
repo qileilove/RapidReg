@@ -33,7 +33,7 @@ public class CasePhoto extends BaseModel {
             columnType = long.class,
             foreignKeyColumnName = "id"
     )})
-    RecordModel record;
+    Case record;
 
 
     public CasePhoto() {
@@ -55,11 +55,11 @@ public class CasePhoto extends BaseModel {
         this.photo = photo;
     }
 
-    public RecordModel getRecord() {
+    public Case getCase() {
         return record;
     }
 
-    public void setRecord(RecordModel record) {
+    public void setCase(Case record) {
         this.record = record;
     }
 

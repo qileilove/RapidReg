@@ -15,8 +15,8 @@ import org.unicef.rapidreg.childcase.CaseRegisterWrapperFragment;
 import org.unicef.rapidreg.event.SaveTracingEvent;
 import org.unicef.rapidreg.forms.Section;
 import org.unicef.rapidreg.forms.TracingFormRoot;
-import org.unicef.rapidreg.service.RecordService;
 import org.unicef.rapidreg.service.TracingFormService;
+import org.unicef.rapidreg.service.TracingService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class TracingActivity extends RecordActivity {
         List<String> requiredFieldNames = new ArrayList<>();
 
         for (Section section : tracingForm.getSections()) {
-            Collections.addAll(requiredFieldNames, RecordService.getInstance()
+            Collections.addAll(requiredFieldNames, TracingService.getInstance()
                     .fetchRequiredFiledNames(section.getFields()).toArray(new String[0]));
         }
 

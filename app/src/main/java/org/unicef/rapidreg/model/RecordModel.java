@@ -2,15 +2,12 @@ package org.unicef.rapidreg.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.data.Blob;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.unicef.rapidreg.db.PrimeroDB;
-
 import java.sql.Date;
 
-@Table(database = PrimeroDB.class)
+
 public class RecordModel extends BaseModel {
     public static final int CASE = 0;
     public static final int TRACING = 1;

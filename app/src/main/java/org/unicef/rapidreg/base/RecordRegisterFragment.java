@@ -1,7 +1,6 @@
 package org.unicef.rapidreg.base;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +17,7 @@ import org.unicef.rapidreg.childcase.media.CasePhotoAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecordRegisterFragment extends MvpFragment<RecordRegisterView, RecordRegisterPresenter>
+public abstract class RecordRegisterFragment extends MvpFragment<RecordRegisterView, RecordRegisterPresenter>
         implements RecordRegisterView {
 
     @BindView(R.id.register_forms_content)
@@ -49,12 +48,6 @@ public class RecordRegisterFragment extends MvpFragment<RecordRegisterView, Reco
 
         int position = FragmentPagerItem.getPosition(getArguments());
         presenter.initContext(getActivity(), position);
-    }
-
-    @NonNull
-    @Override
-    public RecordRegisterPresenter createPresenter() {
-        return new RecordRegisterPresenter();
     }
 
     @Override

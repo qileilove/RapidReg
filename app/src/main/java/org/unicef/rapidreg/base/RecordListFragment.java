@@ -3,7 +3,6 @@ package org.unicef.rapidreg.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,8 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import org.unicef.rapidreg.R;
 import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.childcase.CaseFeature;
-import org.unicef.rapidreg.model.RecordModel;
 import org.unicef.rapidreg.service.CaseFormService;
-import org.unicef.rapidreg.service.RecordService;
+import org.unicef.rapidreg.service.CaseService;
 import org.unicef.rapidreg.service.TracingFormService;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
 import org.unicef.rapidreg.service.cache.SubformCache;
@@ -44,7 +42,7 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
     protected static final int HAVE_NO_RESULT = 1;
 
     @BindView(R.id.list_container)
-    protected RecyclerView caseListContainer;
+    protected RecyclerView listContainer;
 
     @BindView(R.id.order_spinner)
     protected Spinner orderSpinner;
@@ -78,20 +76,9 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
     public void initView(final RecordListAdapter adapter) {
         this.adapter = adapter;
 
-        initCaseListContainer(adapter);
+        initListContainer(adapter);
         initOrderSpinner(adapter);
         initFloatingMenu();
-    }
-
-    private void initCaseListContainer(RecordListAdapter adapter) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        caseListContainer.setLayoutManager(layoutManager);
-        caseListContainer.setAdapter(adapter);
-
-        List<RecordModel> caseList = RecordService.getInstance().getCaseList();
-        int index = caseList.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
-        viewSwitcher.setDisplayedChild(index);
     }
 
     private void initFloatingMenu() {
@@ -111,7 +98,7 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
 
     @OnClick(R.id.add_case)
     public void onCaseAddClicked() {
-        RecordService.getInstance().clearCaseCache();
+        CaseService.getInstance().clearCaseCache();
         SubformCache.clear();
         CaseFieldValueCache.clearAudioFile();
         if (!CaseFormService.getInstance().isFormReady()) {
@@ -127,7 +114,7 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
 
     @OnClick(R.id.add_tracing_request)
     public void onTracingAddClicked() {
-        RecordService.getInstance().clearCaseCache();
+        CaseService.getInstance().clearCaseCache();
         SubformCache.clear();
         CaseFieldValueCache.clearAudioFile();
         if (!TracingFormService.getInstance().isFormReady()) {
@@ -150,6 +137,8 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
     }
 
     protected abstract void initOrderSpinner(final RecordListAdapter adapter);
+
+    protected abstract void initListContainer(final RecordListAdapter adapter);
 
     public enum SpinnerState {
         AGE_ASC(R.drawable.age_up, "Age ascending order", "Age"),
@@ -215,6 +204,5 @@ public abstract class RecordListFragment extends MvpFragment<RecordListView, Rec
 
             return view;
         }
-
     }
 }

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.unicef.rapidreg.R;
+import org.unicef.rapidreg.base.RecordActivity;
 import org.unicef.rapidreg.childcase.CaseActivity;
 import org.unicef.rapidreg.childcase.media.AudioRecorderActivity;
 import org.unicef.rapidreg.service.cache.CaseFieldValueCache;
@@ -29,12 +30,12 @@ public class AudioUploadViewHolder extends BaseViewHolder {
     @BindView(R.id.no_file_text_view)
     TextView noFileTextView;
 
-    private CaseActivity activity;
+    private RecordActivity activity;
 
     public AudioUploadViewHolder(Context context, View itemView) {
         super(context, itemView);
         ButterKnife.bind(this, itemView);
-        activity = (CaseActivity) context;
+        activity = (RecordActivity) context;
 
         mFileName = CaseFieldValueCache.AUDIO_FILE_PATH;
     }

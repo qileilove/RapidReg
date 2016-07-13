@@ -96,10 +96,6 @@ public abstract class RecordSearchFragment extends MvpFragment<RecordListView, R
         presenter.initView(getActivity());
     }
 
-    @Override
-    public RecordListPresenter createPresenter() {
-        return new RecordListPresenter(RecordModel.CASE);
-    }
 
     @Override
     public void initView(final RecordListAdapter adapter) {
@@ -157,7 +153,7 @@ public abstract class RecordSearchFragment extends MvpFragment<RecordListView, R
         Map<String, String> values = getFilterValues();
         searchBarTitle.setText(getFirstValidValue(values));
 
-        List<RecordModel> searchResult = getSearchResult(values);
+        List<? extends RecordModel> searchResult = getSearchResult(values);
 
         int resultIndex = searchResult.isEmpty() ? HAVE_NO_RESULT : HAVE_RESULT_LIST;
         searchResultSwitcher.setDisplayedChild(resultIndex);
@@ -200,5 +196,5 @@ public abstract class RecordSearchFragment extends MvpFragment<RecordListView, R
         return values;
     }
 
-    protected abstract List<RecordModel> getSearchResult(Map<String, String> filters);
+    protected abstract List<? extends RecordModel> getSearchResult(Map<String, String> filters);
 }
