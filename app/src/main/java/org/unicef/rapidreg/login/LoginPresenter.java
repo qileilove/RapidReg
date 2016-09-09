@@ -2,9 +2,11 @@ package org.unicef.rapidreg.login;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
@@ -17,11 +19,19 @@ import org.unicef.rapidreg.model.LoginRequestBody;
 import org.unicef.rapidreg.model.LoginResponse;
 import org.unicef.rapidreg.model.User;
 import org.unicef.rapidreg.network.AuthService;
+import org.unicef.rapidreg.network.ConnectionInfo;
 import org.unicef.rapidreg.network.HttpStatusCodeHandler;
 import org.unicef.rapidreg.network.NetworkStatusManager;
 import org.unicef.rapidreg.service.UserService;
 import org.unicef.rapidreg.utils.EncryptHelper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -38,6 +48,7 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
 
     private Context context;
     private IntentSender intentSender;
+    private ConnectionInfo connectionInfo;
 
     public LoginPresenter(Context context) {
         this.context = context;
@@ -63,16 +74,18 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
 
         PrimeroConfiguration.setApiBaseUrl(url.endsWith("/") ? url : String.format("%s/", url));
         try {
-            AuthService.getInstance().init(context);
+//            AuthService.getInstance().init(context);
         } catch (Exception e) {
             showLoginResultMessage(e.getMessage());
         }
 
         showLoadingIndicator(true);
         if (NetworkStatusManager.isOnline(context)) {
-            doLoginOnline(context, username, password, url);
+            //TODO GET CERTIFICATION FILE
+            doGetCertification(url);
+//            doLoginOnline(context, username, password, url);
         } else {
-            doLoginOffline(context, username, password);
+//            doLoginOffline(context, username, password);
         }
 
     }
@@ -103,6 +116,12 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
         super.detachView(retainInstance);
 
         subscriptions.clear();
+    }
+
+    private void doGetCertification(String url) {
+        GetCertificationTask task = new GetCertificationTask();
+        task.execute(url);
+
     }
 
     private void doLoginOnline(final Context context, final String username,
@@ -203,4 +222,49 @@ public class LoginPresenter extends MvpBasePresenter<LoginView> {
         Log.e(TAG, "Can not get session id");
         return null;
     }
+
+    private void doExprotCertificate() {
+        X509Certificate cert = connectionInfo.getCertificates()[0];
+        File path = context.getFilesDir();
+        Log.e(TAG, "path: " + path.toString());
+        File file = new File(path, cert.getSerialNumber().toString(16) + ".crt");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(cert.getEncoded());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateEncodingException e) {
+            e.printStackTrace();
+        }
+        String outputFile = file.getAbsolutePath();
+        Log.e(TAG, "doExprotCertificate: " + outputFile);
+    }
+
+    private class GetCertificationTask extends AsyncTask<String, Integer, ConnectionInfo> {
+
+        @Override
+        protected ConnectionInfo doInBackground(String... params) {
+            try {
+                return ConnectionInfo.fetch(new URL(params[0]));
+            } catch (Exception e) {
+                return new ConnectionInfo(e);
+            }
+        }
+        @Override
+        protected void onPostExecute(ConnectionInfo info) {
+            if (info.getException() == null) {
+                connectionInfo = info;
+                doExprotCertificate();
+                Log.e(TAG, "onPostExecute success: ");
+            } else {
+                Log.e(TAG, "Couldn't fetch certificate", info.getException());
+                Toast.makeText(context, info.getException().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
 }
